@@ -20,7 +20,7 @@ import cats.InjectK
 import cats.free.Free
 import github4s.GHRepos
 import github4s.GithubResponses._
-import github4s.free.domain._
+import github4s.taglessFinal.domain._
 
 /**
  * Issues ops ADT

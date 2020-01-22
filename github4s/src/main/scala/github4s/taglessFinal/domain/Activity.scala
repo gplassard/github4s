@@ -14,32 +14,29 @@
  * limitations under the License.
  */
 
-package github4s.free.domain
+package github4s.taglessFinal.domain
 
-case class Gist(
+import github4s.taglessFinal.domain.{Repository, User}
+
+case class Subscription(
+    subscribed: Boolean,
+    ignored: Boolean,
+    reason: Option[String],
+    created_at: String,
     url: String,
-    id: String,
-    description: String,
-    public: Boolean,
-    files: Map[String, GistFile]
+    thread_url: String)
+
+case class SubscriptionRequest(
+    subscribed: Boolean,
+    ignored: Boolean
 )
 
-case class GistFile(
-    content: String
+case class Stargazer(
+    starred_at: Option[String],
+    user: User
 )
 
-case class NewGistRequest(
-    description: String,
-    public: Boolean,
-    files: Map[String, GistFile]
-)
-
-case class EditGistFile(
-    content: String,
-    filename: Option[String] = None
-)
-
-case class EditGistRequest(
-    description: String,
-    files: Map[String, Option[EditGistFile]]
+case class StarredRepository(
+    starred_at: Option[String],
+    repo: Repository
 )

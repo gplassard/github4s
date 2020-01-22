@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package github4s.free.domain
+package github4s.taglessFinal.domain
 
 case class Repository(
     id: Int,

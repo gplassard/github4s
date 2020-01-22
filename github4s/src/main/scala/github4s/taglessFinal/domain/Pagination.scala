@@ -14,27 +14,9 @@
  * limitations under the License.
  */
 
-package github4s.free.domain
+package github4s.taglessFinal.domain
 
-case class Subscription(
-    subscribed: Boolean,
-    ignored: Boolean,
-    reason: Option[String],
-    created_at: String,
-    url: String,
-    thread_url: String)
-
-case class SubscriptionRequest(
-    subscribed: Boolean,
-    ignored: Boolean
-)
-
-case class Stargazer(
-    starred_at: Option[String],
-    user: User
-)
-
-case class StarredRepository(
-    starred_at: Option[String],
-    repo: Repository
+case class Pagination(
+    page: Int,
+    per_page: Int
 )

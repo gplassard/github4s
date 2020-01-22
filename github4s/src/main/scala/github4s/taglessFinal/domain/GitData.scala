@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package github4s.free.domain
+package github4s.taglessFinal.domain
 
 class RefInfo(val sha: String, val url: String) {
   override def toString: String = s"RefInfo($sha, $url)"

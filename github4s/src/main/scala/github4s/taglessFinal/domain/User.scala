@@ -14,21 +14,23 @@
  * limitations under the License.
  */
 
-package github4s.taglessFinal.algebra
+package github4s.taglessFinal.domain
 
-import github4s.GithubResponses.GHResponse
-import github4s.taglessFinal.domain.{Pagination, User}
-
-abstract class UserAlg[F[_]] {
-
-  def getUser(username: String, accessToken: Option[String] = None): F[GHResponse[User]]
-
-  def getAuthUser(accessToken: Option[String] = None): F[GHResponse[User]]
-
-  def getUsers(
-      since: Int,
-      pagination: Option[Pagination] = None,
-      accessToken: Option[String] = None): F[GHResponse[List[User]]]
-
-  def getFollowing(username: String, accessToken: Option[String] = None): F[GHResponse[List[User]]]
-}
+case class User(
+    id: Int,
+    login: String,
+    avatar_url: String,
+    html_url: String,
+    name: Option[String] = None,
+    email: Option[String] = None,
+    company: Option[String] = None,
+    blog: Option[String] = None,
+    location: Option[String] = None,
+    bio: Option[String] = None,
+    followers_url: Option[String] = None,
+    following_url: Option[String] = None,
+    `type`: String = "User", // I think this can be either "User" or "Organization"
+    hireable: Option[Boolean] = None,
+    public_repos: Option[Int] = None,
+    contributions: Option[Int] = None
+)

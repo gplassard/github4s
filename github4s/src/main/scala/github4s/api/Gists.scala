@@ -17,7 +17,7 @@
 package github4s.api
 
 import cats.Applicative
-import github4s.free.domain._
+import github4s.taglessFinal.domain._
 import github4s._
 import io.circe.generic.auto._
 import io.circe.syntax._

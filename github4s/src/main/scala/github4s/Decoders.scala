@@ -22,7 +22,9 @@ import cats.instances.list._
 import cats.syntax.either._
 import cats.syntax.list._
 import cats.syntax.traverse._
-import github4s.free.domain._
+import github4s.taglessFinal.domain._
+import github4s.taglessFinal.domain
+import github4s.taglessFinal.domain.{Stargazer, StarredRepository}
 import io.circe.Decoder.Result
 import io.circe._
 import io.circe.generic.auto._
@@ -225,21 +227,21 @@ object Decoders {
 
   implicit val decodeStargazer: Decoder[Stargazer] =
     Decoder[User]
-      .map(Stargazer(None, _))
+      .map(domain.Stargazer(None, _))
       .or(Decoder.instance(c =>
         for {
           starred_at <- c.downField("starred_at").as[String]
           user       <- c.downField("user").as[User]
-        } yield Stargazer(Some(starred_at), user)))
+        } yield domain.Stargazer(Some(starred_at), user)))
 
   implicit val decodeStarredRepository: Decoder[StarredRepository] =
     Decoder[Repository]
-      .map(StarredRepository(None, _))
+      .map(domain.StarredRepository(None, _))
       .or(Decoder.instance(c =>
         for {
           starred_at <- c.downField("starred_at").as[String]
           repo       <- c.downField("repo").as[Repository]
-        } yield StarredRepository(Some(starred_at), repo)))
+        } yield domain.StarredRepository(Some(starred_at), repo)))
 
   implicit def decodeNonEmptyList[T](implicit D: Decoder[T]): Decoder[NonEmptyList[T]] = {
 

@@ -14,36 +14,32 @@
  * limitations under the License.
  */
 
-package github4s.free.domain
+package github4s.taglessFinal.domain
 
-case class Authorization(
-    id: Int,
+case class Gist(
     url: String,
-    token: String
+    id: String,
+    description: String,
+    public: Boolean,
+    files: Map[String, GistFile]
 )
 
-case class NewAuthRequest(
-    scopes: List[String],
-    note: String,
-    client_id: String,
-    client_secret: String
+case class GistFile(
+    content: String
 )
 
-case class Authorize(
-    url: String,
-    state: String
+case class NewGistRequest(
+    description: String,
+    public: Boolean,
+    files: Map[String, GistFile]
 )
 
-case class OAuthToken(
-    access_token: String,
-    token_type: String,
-    scope: String
+case class EditGistFile(
+    content: String,
+    filename: Option[String] = None
 )
 
-case class NewOAuthRequest(
-    client_id: String,
-    client_secret: String,
-    code: String,
-    redirect_uri: String,
-    state: String
+case class EditGistRequest(
+    description: String,
+    files: Map[String, Option[EditGistFile]]
 )

@@ -19,7 +19,7 @@ package github4s.free.algebra
 import cats.InjectK
 import cats.free.Free
 import github4s.GithubResponses._
-import github4s.free.domain.{Pagination, User}
+import github4s.taglessFinal.domain.{Pagination, User}
 
 /**
  * Organizations ops ADT

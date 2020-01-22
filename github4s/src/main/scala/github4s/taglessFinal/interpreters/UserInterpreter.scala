@@ -20,7 +20,7 @@ import cats.Applicative
 import github4s.GithubResponses.GHResponse
 import github4s.api.MyUsers
 import github4s.taglessFinal.algebra.UserAlg
-import github4s.free.domain.{Pagination, User}
+import github4s.taglessFinal.domain.{Pagination, User}
 import github4s.GithubDefaultUrls._
 
 class UserInterpreter[F[_]: Applicative] extends UserAlg[F] {

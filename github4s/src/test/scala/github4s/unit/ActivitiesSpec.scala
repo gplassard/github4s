@@ -21,6 +21,7 @@ import github4s.GithubResponses.{GHResponse, GHResult}
 import github4s.HttpClient
 import github4s.api.Activities
 import github4s.free.domain._
+import github4s.taglessFinal.domain.{Stargazer, StarredRepository, Subscription}
 import github4s.utils.BaseSpec
 
 class ActivitiesSpec extends BaseSpec {

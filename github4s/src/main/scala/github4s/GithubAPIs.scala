@@ -20,7 +20,8 @@ import cats.data.NonEmptyList
 import github4s.GithubResponses.{GHIO, GHResponse}
 import github4s.app._
 import github4s.free.algebra._
-import github4s.free.domain._
+import github4s.taglessFinal.domain._
+import github4s.taglessFinal.domain.{Stargazer, StarredRepository, Subscription}
 
 class GHUsers(accessToken: Option[String] = None)(implicit O: UserOps[GitHub4s]) {
 

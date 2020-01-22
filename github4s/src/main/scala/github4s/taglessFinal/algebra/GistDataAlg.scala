@@ -18,7 +18,7 @@ package github4s.taglessFinal.algebra
 
 import cats.data.NonEmptyList
 import github4s.GithubResponses.GHResponse
-import github4s.free.domain.{Ref, RefAuthor, RefCommit, RefInfo, Tag, TreeData, TreeResult}
+import github4s.taglessFinal.domain.{Ref, RefAuthor, RefCommit, RefInfo, Tag, TreeData, TreeResult}
 
 abstract class GistDataAlg[F[_]] {
 

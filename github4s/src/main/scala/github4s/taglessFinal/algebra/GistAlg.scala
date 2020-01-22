@@ -17,7 +17,7 @@
 package github4s.taglessFinal.algebra
 
 import github4s.GithubResponses.GHResponse
-import github4s.free.domain.{EditGistFile, Gist, GistFile}
+import github4s.taglessFinal.domain.{EditGistFile, Gist, GistFile}
 
 abstract class GistAlg[F[_]] {
 

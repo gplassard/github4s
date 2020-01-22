@@ -17,7 +17,7 @@
 package github4s.taglessFinal.algebra
 
 import github4s.GithubResponses.GHResponse
-import github4s.free.domain.{Pagination, User}
+import github4s.taglessFinal.domain.{Pagination, User}
 
 abstract class OrganizationAlg[F[_]] {
 

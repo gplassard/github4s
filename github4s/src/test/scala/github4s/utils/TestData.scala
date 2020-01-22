@@ -20,6 +20,8 @@ import com.github.marklister.base64.Base64._
 import github4s.free.domain._
 import java.util.UUID
 
+import github4s.taglessFinal.domain.{Stargazer, StarredRepository, Subscription}
+
 trait TestData extends DummyGithubUrls {
 
   val sampleToken: Option[String]          = Some("token")

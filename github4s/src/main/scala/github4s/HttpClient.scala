@@ -17,7 +17,7 @@
 package github4s
 
 import cats.Applicative
-import github4s.free.domain.Pagination
+import github4s.taglessFinal.domain.Pagination
 import io.circe.Decoder
 import github4s.GithubResponses.{
   GHResponse,

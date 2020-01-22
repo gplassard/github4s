@@ -19,7 +19,7 @@ package github4s.api
 import cats.Applicative
 import github4s.GithubResponses.GHResponse
 import github4s.{GithubApiUrls, HttpClient, HttpRequestBuilderExtension}
-import github4s.free.domain._
+import github4s.taglessFinal.domain._
 import github4s.free.interpreters.Capture
 import github4s.util.URLEncoder
 import io.circe.syntax._

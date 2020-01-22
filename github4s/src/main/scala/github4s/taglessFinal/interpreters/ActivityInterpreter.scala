@@ -14,23 +14,6 @@
  * limitations under the License.
  */
 
-package github4s.free.domain
+package github4s.taglessFinal.interpreters
 
-case class User(
-    id: Int,
-    login: String,
-    avatar_url: String,
-    html_url: String,
-    name: Option[String] = None,
-    email: Option[String] = None,
-    company: Option[String] = None,
-    blog: Option[String] = None,
-    location: Option[String] = None,
-    bio: Option[String] = None,
-    followers_url: Option[String] = None,
-    following_url: Option[String] = None,
-    `type`: String = "User", // I think this can be either "User" or "Organization"
-    hireable: Option[Boolean] = None,
-    public_repos: Option[Int] = None,
-    contributions: Option[Int] = None
-)
+class ActivityInterpreter {}

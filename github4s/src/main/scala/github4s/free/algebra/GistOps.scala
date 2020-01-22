@@ -19,7 +19,7 @@ package github4s.free.algebra
 import cats.InjectK
 import cats.free.Free
 import github4s.GithubResponses._
-import github4s.free.domain.{EditGistFile, Gist, GistFile}
+import github4s.taglessFinal.domain.{EditGistFile, Gist, GistFile}
 
 /**
  * Gist ops ADT

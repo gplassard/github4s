@@ -19,7 +19,7 @@ package github4s.taglessFinal.modules
 import cats.Applicative
 import github4s.GithubResponses.GHResponse
 import github4s.taglessFinal.algebra._
-import github4s.free.domain._
+import github4s.taglessFinal.domain._
 
 sealed trait GHWorkflow[F[_]] {
 

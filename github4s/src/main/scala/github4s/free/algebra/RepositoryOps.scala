@@ -20,7 +20,7 @@ import cats.InjectK
 import cats.data.NonEmptyList
 import cats.free.Free
 import github4s.GithubResponses.GHResponse
-import github4s.free.domain._
+import github4s.taglessFinal.domain._
 
 /**
  * Repositories ops ADT

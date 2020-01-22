@@ -17,7 +17,7 @@
 package github4s.taglessFinal.algebra
 
 import github4s.GithubResponses.GHResponse
-import github4s.free.domain.{Authorization, Authorize, OAuthToken}
+import github4s.taglessFinal.domain.{Authorization, Authorize, OAuthToken}
 
 abstract class AuthAlg[F[_]] {
 
