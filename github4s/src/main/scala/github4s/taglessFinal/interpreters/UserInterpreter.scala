@@ -25,22 +25,22 @@ import github4s.GithubDefaultUrls._
 
 class UserInterpreter[F[_]: Applicative] extends UserAlg[F] {
 
-  val client = new MyUsers[F]()
+  val user = new MyUsers[F]()
 
   override def getUser(username: String, accessToken: Option[String]): F[GHResponse[User]] =
-    client.get(accessToken = accessToken, username = username)
+    user.get(accessToken = accessToken, username = username)
 
   override def getAuthUser(accessToken: Option[String]): F[GHResponse[User]] =
-    client.getAuth(accessToken)
+    user.getAuth(accessToken)
 
   override def getUsers(
       since: Int,
       pagination: Option[Pagination],
       accessToken: Option[String]): F[GHResponse[List[User]]] =
-    client.getUsers(accessToken = accessToken, since = since, pagination = pagination)
+    user.getUsers(accessToken = accessToken, since = since, pagination = pagination)
 
   override def getFollowing(
       username: String,
       accessToken: Option[String]): F[GHResponse[List[User]]] =
-    client.getFollowing(accessToken = accessToken, username = username)
+    user.getFollowing(accessToken = accessToken, username = username)
 }

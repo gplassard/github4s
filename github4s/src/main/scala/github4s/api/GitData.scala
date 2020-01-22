@@ -30,10 +30,7 @@ import scala.language.higherKinds
 /**
  * Factory that encapsulates all the Git Database API calls
  */
-class GitData[M[_]: Applicative](
-    implicit urls: GithubApiUrls,
-    C: Capture[M],
-    httpClientImpl: HttpRequestBuilderExtension[M]) {
+class GitData[M[_]: Applicative](implicit urls: GithubApiUrls) {
 
   import Decoders._
   import Encoders._

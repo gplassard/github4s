@@ -19,19 +19,14 @@ package github4s.api
 import cats.Applicative
 import github4s.GithubResponses.GHResponse
 import github4s.taglessFinal.domain._
-import github4s.free.interpreters.Capture
-import github4s.{Decoders, Encoders, GithubApiUrls, HttpClient, HttpRequestBuilderExtension}
-import github4s.util.URLEncoder
+import github4s.{Decoders, Encoders, GithubApiUrls, HttpClient}
 import io.circe.generic.auto._
 import io.circe.syntax._
 
 import scala.language.higherKinds
 
 /** Factory to encapsulate calls related to PullRequests operations  */
-class PullRequests[M[_]: Applicative](
-    implicit urls: GithubApiUrls,
-    C: Capture[M],
-    httpClientImpl: HttpRequestBuilderExtension[M]) {
+class PullRequests[M[_]: Applicative](implicit urls: GithubApiUrls) {
 
   import Decoders._
   import Encoders._
