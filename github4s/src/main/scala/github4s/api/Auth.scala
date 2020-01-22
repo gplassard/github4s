@@ -18,6 +18,7 @@ package github4s.api
 
 import java.util.UUID
 
+import cats.Applicative
 import github4s.GithubResponses.{GHResponse, GHResult}
 import github4s.free.domain._
 import github4s.{GithubApiUrls, HttpClient, HttpRequestBuilderExtension}
@@ -28,7 +29,7 @@ import github4s.free.interpreters.Capture
 import com.github.marklister.base64.Base64.Encoder
 
 /** Factory to encapsulate calls related to Auth operations  */
-class Auth[M[_]](
+class Auth[M[_]: Applicative](
     implicit urls: GithubApiUrls,
     C: Capture[M],
     httpClientImpl: HttpRequestBuilderExtension[M]) {

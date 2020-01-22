@@ -15,7 +15,46 @@
  */
 
 package github4s.taglessFinal.modules
-import github4s.taglessFinal.algebra._
-import github4s.taglessFinal.domain
 
-class GHWorkflow {}
+import cats.Applicative
+import github4s.GithubResponses.GHResponse
+import github4s.taglessFinal.algebra._
+import github4s.free.domain._
+
+sealed trait GHWorkflow[F[_]] {
+
+  //User Algebra
+  def getUser(username: String, accessToken: Option[String] = None): F[GHResponse[User]]
+
+  def getAuthUser(accessToken: Option[String] = None): F[GHResponse[User]]
+
+  def getUsers(
+      since: Int,
+      pagination: Option[Pagination] = None,
+      accessToken: Option[String] = None): F[GHResponse[List[User]]]
+
+  def getFollowing(username: String, accessToken: Option[String] = None): F[GHResponse[List[User]]]
+}
+
+object GHWorkflow {
+
+  def impl[F[_]: Applicative](user: UserAlg[F]): GHWorkflow[F] = new GHWorkflow[F] {
+    override def getUser(username: String, accessToken: Option[String]): F[GHResponse[User]] =
+      user.getUser(username, accessToken)
+
+    override def getAuthUser(accessToken: Option[String]): F[GHResponse[User]] =
+      user.getAuthUser(accessToken)
+
+    override def getUsers(
+        since: Int,
+        pagination: Option[Pagination],
+        accessToken: Option[String]): F[GHResponse[List[User]]] =
+      user.getUsers(since, pagination, accessToken)
+
+    override def getFollowing(
+        username: String,
+        accessToken: Option[String]): F[GHResponse[List[User]]] =
+      user.getFollowing(username, accessToken)
+  }
+
+}

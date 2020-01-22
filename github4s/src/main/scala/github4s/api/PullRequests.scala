@@ -16,6 +16,7 @@
 
 package github4s.api
 
+import cats.Applicative
 import github4s.GithubResponses.GHResponse
 import github4s.free.domain._
 import github4s.free.interpreters.Capture
@@ -27,7 +28,7 @@ import io.circe.syntax._
 import scala.language.higherKinds
 
 /** Factory to encapsulate calls related to PullRequests operations  */
-class PullRequests[M[_]](
+class PullRequests[M[_]: Applicative](
     implicit urls: GithubApiUrls,
     C: Capture[M],
     httpClientImpl: HttpRequestBuilderExtension[M]) {

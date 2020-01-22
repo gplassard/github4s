@@ -14,36 +14,24 @@
  * limitations under the License.
  */
 
-package github4s.taglessFinal.domain
+package github4s.taglessFinal.implicits
 
-case class Authorization(
-    id: Int,
-    url: String,
-    token: String
-)
+import cats.Applicative
+import github4s.taglessFinal.algebra.UserAlg
+import github4s.taglessFinal.interpreters.UserInterpreter
+import github4s.taglessFinal.modules.GHWorkflow
 
-case class NewAuthRequest(
-    scopes: List[String],
-    note: String,
-    client_id: String,
-    client_secret: String
-)
+object runtime {
 
-case class Authorize(
-    url: String,
-    state: String
-)
+  object http {
 
-case class OAuthToken(
-    access_token: String,
-    token_type: String,
-    scope: String
-)
+    // need implicit runtime instance of Capture[F] and HttpRequestBuilderExtension[F]
 
-case class NewOAuthRequest(
-    client_id: String,
-    client_secret: String,
-    code: String,
-    redirect_uri: String,
-    state: String
-)
+    // Algebras
+    implicit def users[F[_]: Applicative]: UserAlg[F] = new UserInterpreter[F]
+
+    implicit def workflow[F[_]: Applicative](implicit U: UserAlg[F]): GHWorkflow[F] =
+      GHWorkflow.impl[F](U)
+
+  }
+}

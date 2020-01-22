@@ -18,16 +18,12 @@ package github4s.api
 
 import cats.Applicative
 import github4s.GithubResponses.GHResponse
-import github4s.{GithubApiUrls, HttpClient, HttpRequestBuilderExtension}
 import github4s.free.domain.{Pagination, User}
-import github4s.free.interpreters.Capture
+import github4s.{GithubApiUrls, HttpClient}
 import io.circe.generic.auto._
 
 /** Factory to encapsulate calls related to Users operations  */
-class Users[M[_]: Applicative](
-    implicit urls: GithubApiUrls,
-    C: Capture[M],
-    httpClientImpl: HttpRequestBuilderExtension[M]) {
+class MyUsers[M[_]: Applicative](implicit urls: GithubApiUrls) {
 
   val httpClient = new HttpClient[M]
 

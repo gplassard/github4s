@@ -17,7 +17,7 @@
 package github4s.taglessFinal.algebra
 
 import github4s.GithubResponses.GHResponse
-import github4s.taglessFinal.domain.{
+import github4s.free.domain.{
   NewPullRequest,
   PRFilter,
   Pagination,

@@ -18,7 +18,7 @@ package github4s.taglessFinal.algebra
 
 import cats.data.NonEmptyList
 import github4s.GithubResponses.GHResponse
-import github4s.taglessFinal.domain.{
+import github4s.free.domain.{
   Branch,
   CombinedStatus,
   Commit,

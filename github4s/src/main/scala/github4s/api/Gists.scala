@@ -16,6 +16,7 @@
 
 package github4s.api
 
+import cats.Applicative
 import github4s.free.domain._
 import github4s._
 import io.circe.generic.auto._
@@ -23,10 +24,11 @@ import io.circe.syntax._
 import github4s.GithubResponses.GHResponse
 import github4s.free.interpreters.Capture
 import github4s.Encoders.encodeEditGistFile
+
 import scala.language.higherKinds
 
 /** Factory to encapsulate calls related to Repositories operations  */
-class Gists[M[_]](
+class Gists[M[_]: Applicative](
     implicit urls: GithubApiUrls,
     C: Capture[M],
     httpClientImpl: HttpRequestBuilderExtension[M]) {

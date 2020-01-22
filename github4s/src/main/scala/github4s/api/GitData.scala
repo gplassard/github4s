@@ -16,6 +16,7 @@
 
 package github4s.api
 
+import cats.Applicative
 import cats.data.NonEmptyList
 import github4s.GithubResponses.GHResponse
 import github4s.{Decoders, Encoders, GithubApiUrls, HttpClient, HttpRequestBuilderExtension}
@@ -29,7 +30,7 @@ import scala.language.higherKinds
 /**
  * Factory that encapsulates all the Git Database API calls
  */
-class GitData[M[_]](
+class GitData[M[_]: Applicative](
     implicit urls: GithubApiUrls,
     C: Capture[M],
     httpClientImpl: HttpRequestBuilderExtension[M]) {

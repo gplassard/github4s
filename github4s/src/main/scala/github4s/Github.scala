@@ -18,12 +18,13 @@ package github4s
 
 import cats.data.{EitherT, Kleisli}
 import cats.MonadError
-import cats.implicits._
 import github4s.GithubResponses._
 import github4s.free.interpreters.Interpreters
 
 import scala.concurrent.Future
 import scala.language.higherKinds
+import cats.implicits._
+import github4s.taglessFinal.modules.GHWorkflow
 
 /**
  * Represent the Github API wrapper
@@ -71,4 +72,5 @@ object Github {
       EitherT[GHIO, GHException, GHResult[A]](gio)
 
   }
+
 }
