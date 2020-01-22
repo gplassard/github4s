@@ -25,7 +25,7 @@ import io.circe.syntax._
 import io.circe.generic.auto._
 
 /** Factory to encapsulate calls related to Issues operations  */
-class Issues[M[_]: Applicative](implicit urls: GithubApiUrls){
+class Issues[M[_]: Applicative](implicit urls: GithubApiUrls) {
 
   val httpClient = new HttpClient[M]
 

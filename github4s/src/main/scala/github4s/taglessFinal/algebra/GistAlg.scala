@@ -21,31 +21,6 @@ import github4s.taglessFinal.domain.{EditGistFile, Gist, GistFile}
 
 abstract class GistAlg[F[_]] {
 
-  /**
-   * Gist ops ADT
-   */
-  sealed trait GistOp[A]
-
-  final case class NewGist(
-      description: String,
-      public: Boolean,
-      files: Map[String, GistFile],
-      accessToken: Option[String] = None
-  ) extends GistOp[GHResponse[Gist]]
-
-  final case class GetGist(
-      gistId: String,
-      sha: Option[String] = None,
-      accessToken: Option[String] = None
-  ) extends GistOp[GHResponse[Gist]]
-
-  final case class EditGist(
-      gistId: String,
-      description: String,
-      files: Map[String, Option[EditGistFile]],
-      accessToken: Option[String] = None
-  ) extends GistOp[GHResponse[Gist]]
-
   def newGist(
       description: String,
       public: Boolean,

@@ -17,17 +17,31 @@
 package github4s.taglessFinal.implicits
 
 import cats.Applicative
-import github4s.taglessFinal.algebra.UserAlg
-import github4s.taglessFinal.interpreters.UserInterpreter
+import github4s.taglessFinal.algebra._
+import github4s.taglessFinal.interpreters._
 import github4s.taglessFinal.modules.GHWorkflow
 
 object runtime {
 
   object http {
 
-    // need implicit runtime instance of Capture[F] and HttpRequestBuilderExtension[F]
+    implicit def activities[F[_]: Applicative]: ActivityAlg[F] = new ActivityInterpreter[F]
 
-    // Algebras
+    implicit def auth[F[_]: Applicative]: AuthAlg[F] = new AuthInterpreter[F]
+
+    implicit def gists[F[_]: Applicative]: GistAlg[F] = new GistInterpreter[F]
+
+    implicit def gitData[F[_]: Applicative]: GitDataAlg[F] = new GitDataInterpreter[F]
+
+    implicit def issues[F[_]: Applicative]: IssuesAlg[F] = new IssueInterpreter[F]
+
+    implicit def organizations[F[_]: Applicative]: OrganizationAlg[F] =
+      new OrganizationInterpreter[F]
+
+    implicit def pullRequests[F[_]: Applicative]: PullRequestAlg[F] = new PullRequestInterpreter[F]
+
+    implicit def repos[F[_]: Applicative]: RepositoryAlg[F] = new RepositoryInterpreter[F]
+
     implicit def users[F[_]: Applicative]: UserAlg[F] = new UserInterpreter[F]
 
     implicit def workflow[F[_]: Applicative](implicit U: UserAlg[F]): GHWorkflow[F] =

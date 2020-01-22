@@ -1,3 +1,19 @@
+/*
+ * Copyright 2016-2020 47 Degrees, LLC. <http://www.47deg.com>
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package github4s.taglessFinal.interpreters
 
 import cats.Applicative
@@ -7,13 +23,30 @@ import github4s.taglessFinal.algebra.AuthAlg
 import github4s.taglessFinal.domain.{Authorization, Authorize, OAuthToken}
 import github4s.GithubDefaultUrls._
 
-class AuthInterpreter[F[_]: Applicative] extends AuthAlg[F]{
+class AuthInterpreter[F[_]: Applicative] extends AuthAlg[F] {
 
   val auth = new Auth[F]()
 
-  override def newAuth(username: String, password: String, scopes: List[String], note: String, client_id: String, client_secret: String): F[GHResponse[Authorization]] = auth.newAuth(username,password,scopes,note,client_id,client_secret,Map())
+  override def newAuth(
+      username: String,
+      password: String,
+      scopes: List[String],
+      note: String,
+      client_id: String,
+      client_secret: String): F[GHResponse[Authorization]] =
+    auth.newAuth(username, password, scopes, note, client_id, client_secret, Map())
 
-  override def authorizeUrl(client_id: String, redirect_uri: String, scopes: List[String]): F[GHResponse[Authorize]] = auth.authorizeUrl(client_id,redirect_uri,scopes)
+  override def authorizeUrl(
+      client_id: String,
+      redirect_uri: String,
+      scopes: List[String]): F[GHResponse[Authorize]] =
+    auth.authorizeUrl(client_id, redirect_uri, scopes)
 
-  override def getAccessToken(client_id: String, client_secret: String, code: String, redirect_uri: String, state: String): F[GHResponse[OAuthToken]] = auth.getAccessToken(client_id,client_secret,code,redirect_uri,state,Map())
+  override def getAccessToken(
+      client_id: String,
+      client_secret: String,
+      code: String,
+      redirect_uri: String,
+      state: String): F[GHResponse[OAuthToken]] =
+    auth.getAccessToken(client_id, client_secret, code, redirect_uri, state, Map())
 }

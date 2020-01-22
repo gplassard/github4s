@@ -21,26 +21,6 @@ import github4s.taglessFinal.domain.{Pagination, User}
 
 abstract class OrganizationAlg[F[_]] {
 
-  /**
-   * Organizations ops ADT
-   */
-  sealed trait OrganizationOp[A]
-
-  final case class ListMembers(
-      org: String,
-      filter: Option[String] = None,
-      role: Option[String] = None,
-      pagination: Option[Pagination] = None,
-      accessToken: Option[String] = None
-  ) extends OrganizationOp[GHResponse[List[User]]]
-
-  final case class ListOutsideCollaborators(
-      org: String,
-      filter: Option[String] = None,
-      pagination: Option[Pagination] = None,
-      accessToken: Option[String] = None
-  ) extends OrganizationOp[GHResponse[List[User]]]
-
   def listMembers(
       org: String,
       filter: Option[String] = None,

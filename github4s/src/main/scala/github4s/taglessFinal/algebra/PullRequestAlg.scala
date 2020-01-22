@@ -28,60 +28,6 @@ import github4s.taglessFinal.domain.{
 
 abstract class PullRequestAlg[F[_]] {
 
-  /**
-   * PullRequests ops ADT
-   */
-  sealed trait PullRequestOp[A]
-
-  final case class GetPullRequest(
-      owner: String,
-      repo: String,
-      number: Int,
-      accessToken: Option[String] = None
-  ) extends PullRequestOp[GHResponse[PullRequest]]
-
-  final case class ListPullRequests(
-      owner: String,
-      repo: String,
-      filters: List[PRFilter] = Nil,
-      accessToken: Option[String] = None,
-      pagination: Option[Pagination] = None
-  ) extends PullRequestOp[GHResponse[List[PullRequest]]]
-
-  final case class ListPullRequestFiles(
-      owner: String,
-      repo: String,
-      number: Int,
-      accessToken: Option[String] = None,
-      pagination: Option[Pagination] = None
-  ) extends PullRequestOp[GHResponse[List[PullRequestFile]]]
-
-  final case class CreatePullRequest(
-      owner: String,
-      repo: String,
-      newPullRequest: NewPullRequest,
-      head: String,
-      base: String,
-      maintainerCanModify: Option[Boolean] = Some(true),
-      accessToken: Option[String] = None
-  ) extends PullRequestOp[GHResponse[PullRequest]]
-
-  final case class ListPullRequestReviews(
-      owner: String,
-      repo: String,
-      pullRequest: Int,
-      accessToken: Option[String] = None,
-      pagination: Option[Pagination] = None
-  ) extends PullRequestOp[GHResponse[List[PullRequestReview]]]
-
-  final case class GetPullRequestReview(
-      owner: String,
-      repo: String,
-      pullRequest: Int,
-      review: Int,
-      accessToken: Option[String] = None
-  ) extends PullRequestOp[GHResponse[PullRequestReview]]
-
   def getPullRequest(
       owner: String,
       repo: String,
