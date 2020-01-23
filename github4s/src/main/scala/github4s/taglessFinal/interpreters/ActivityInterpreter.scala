@@ -21,26 +21,24 @@ import github4s.GithubResponses.GHResponse
 import github4s.api.Activities
 import github4s.taglessFinal.algebra.ActivityAlg
 import github4s.taglessFinal.domain.{Pagination, Stargazer, StarredRepository, Subscription}
-import github4s.GithubDefaultUrls._
 
-class ActivityInterpreter[F[_]: Applicative] extends ActivityAlg[F] {
-
-  val activity = new Activities[F]()
-
+class ActivityInterpreter[F[_]: Applicative](accessToken: Option[String] = None)(
+    implicit act: Activities[F])
+    extends ActivityAlg[F] {
   override def setThreadSub(
       id: Int,
       subscribed: Boolean,
       ignored: Boolean,
-      accessToken: Option[String]): F[GHResponse[Subscription]] =
-    activity.setThreadSub(accessToken, Map(), id, subscribed, ignored)
+      headers: Map[String, String] = Map()): F[GHResponse[Subscription]] =
+    act.setThreadSub(accessToken, headers, id, subscribed, ignored)
 
   override def listStargazers(
       owner: String,
       repo: String,
       timeline: Boolean,
       pagination: Option[Pagination],
-      accessToken: Option[String]): F[GHResponse[List[Stargazer]]] =
-    activity.listStargazers(accessToken, Map(), owner, repo, timeline, pagination)
+      headers: Map[String, String] = Map()): F[GHResponse[List[Stargazer]]] =
+    act.listStargazers(accessToken, headers, owner, repo, timeline, pagination)
 
   override def listStarredRepositories(
       username: String,
@@ -48,10 +46,10 @@ class ActivityInterpreter[F[_]: Applicative] extends ActivityAlg[F] {
       sort: Option[String],
       direction: Option[String],
       pagination: Option[Pagination],
-      accessToken: Option[String]): F[GHResponse[List[StarredRepository]]] =
-    activity.listStarredRepositories(
+      headers: Map[String, String] = Map()): F[GHResponse[List[StarredRepository]]] =
+    act.listStarredRepositories(
       accessToken,
-      Map(),
+      headers,
       username,
       timeline,
       sort,

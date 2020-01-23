@@ -28,57 +28,57 @@ import github4s.taglessFinal.domain.{
   PullRequestFile,
   PullRequestReview
 }
-import github4s.GithubDefaultUrls._
 
-class PullRequestInterpreter[F[_]: Applicative] extends PullRequestAlg[F] {
+class PullRequestInterpreter[F[_]: Applicative](accessToken: Option[String] = None)(
+    implicit pr: PullRequests[F])
+    extends PullRequestAlg[F] {
 
-  val pr = new PullRequests[F]
-  override def getPullRequest(
+  override def get(
       owner: String,
       repo: String,
       number: Int,
-      accessToken: Option[String]): F[GHResponse[PullRequest]] =
-    pr.get(accessToken, Map(), owner, repo, number)
+      headers: Map[String, String] = Map()): F[GHResponse[PullRequest]] =
+    pr.get(accessToken, headers, owner, repo, number)
 
-  override def listPullRequests(
+  override def list(
       owner: String,
       repo: String,
       filters: List[PRFilter],
-      accessToken: Option[String],
+      headers: Map[String, String] = Map(),
       pagination: Option[Pagination]): F[GHResponse[List[PullRequest]]] =
-    pr.list(accessToken, Map(), owner, repo, filters, pagination)
+    pr.list(accessToken, headers, owner, repo, filters, pagination)
 
-  override def listPullRequestFiles(
+  override def listFiles(
       owner: String,
       repo: String,
       number: Int,
-      accessToken: Option[String],
+      headers: Map[String, String] = Map(),
       pagination: Option[Pagination]): F[GHResponse[List[PullRequestFile]]] =
-    pr.listFiles(accessToken, Map(), owner, repo, number, pagination)
+    pr.listFiles(accessToken, headers, owner, repo, number, pagination)
 
-  override def createPullRequest(
+  override def create(
       owner: String,
       repo: String,
       newPullRequest: NewPullRequest,
       head: String,
       base: String,
       maintainerCanModify: Option[Boolean],
-      accessToken: Option[String]): F[GHResponse[PullRequest]] =
-    pr.create(accessToken, Map(), owner, repo, newPullRequest, head, base, maintainerCanModify)
+      headers: Map[String, String] = Map()): F[GHResponse[PullRequest]] =
+    pr.create(accessToken, headers, owner, repo, newPullRequest, head, base, maintainerCanModify)
 
-  override def listPullRequestReviews(
+  override def listReviews(
       owner: String,
       repo: String,
       pullRequest: Int,
-      accessToken: Option[String],
+      headers: Map[String, String] = Map(),
       pagination: Option[Pagination]): F[GHResponse[List[PullRequestReview]]] =
-    pr.listReviews(accessToken, Map(), owner, repo, pullRequest, pagination)
+    pr.listReviews(accessToken, headers, owner, repo, pullRequest, pagination)
 
-  override def getPullRequestReview(
+  override def getReview(
       owner: String,
       repo: String,
       pullRequest: Int,
       review: Int,
-      accessToken: Option[String]): F[GHResponse[PullRequestReview]] =
-    pr.getReview(accessToken, Map(), owner, repo, pullRequest, review)
+      headers: Map[String, String] = Map()): F[GHResponse[PullRequestReview]] =
+    pr.getReview(accessToken, headers, owner, repo, pullRequest, review)
 }

@@ -21,25 +21,22 @@ import github4s.GithubResponses.GHResponse
 import github4s.api.Organizations
 import github4s.taglessFinal.algebra.OrganizationAlg
 import github4s.taglessFinal.domain.{Pagination, User}
-import github4s.GithubDefaultUrls._
 
-class OrganizationInterpreter[F[_]: Applicative] extends OrganizationAlg[F] {
-
-  val orgs = new Organizations[F]()
-
+class OrganizationInterpreter[F[_]: Applicative](accessToken: Option[String] = None)(
+    implicit orgs: Organizations[F])
+    extends OrganizationAlg[F] {
   override def listMembers(
       org: String,
       filter: Option[String],
       role: Option[String],
       pagination: Option[Pagination],
-      accessToken: Option[String]): F[GHResponse[List[User]]] =
-    orgs.listMembers(accessToken, Map(), org, filter, role, pagination)
+      headers: Map[String, String] = Map()): F[GHResponse[List[User]]] =
+    orgs.listMembers(accessToken, headers, org, filter, role, pagination)
 
   override def listOutsideCollaborators(
       org: String,
       filter: Option[String],
       pagination: Option[Pagination],
-      accessToken: Option[String]): F[GHResponse[List[User]]] =
-    orgs.listOutsideCollaborators(accessToken, Map(), org, filter, pagination)
-
+      headers: Map[String, String] = Map()): F[GHResponse[List[User]]] =
+    orgs.listOutsideCollaborators(accessToken, headers, org, filter, pagination)
 }

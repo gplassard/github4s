@@ -21,25 +21,24 @@ import github4s.GithubResponses.GHResponse
 import github4s.api.Auth
 import github4s.taglessFinal.algebra.AuthAlg
 import github4s.taglessFinal.domain.{Authorization, Authorize, OAuthToken}
-import github4s.GithubDefaultUrls._
 
-class AuthInterpreter[F[_]: Applicative] extends AuthAlg[F] {
-
-  val auth = new Auth[F]()
-
+class AuthInterpreter[F[_]: Applicative](accessToken: Option[String] = None)(implicit auth: Auth[F])
+    extends AuthAlg[F] {
   override def newAuth(
       username: String,
       password: String,
       scopes: List[String],
       note: String,
       client_id: String,
-      client_secret: String): F[GHResponse[Authorization]] =
-    auth.newAuth(username, password, scopes, note, client_id, client_secret, Map())
+      client_secret: String,
+      headers: Map[String, String] = Map()): F[GHResponse[Authorization]] =
+    auth.newAuth(username, password, scopes, note, client_id, client_secret, headers)
 
   override def authorizeUrl(
       client_id: String,
       redirect_uri: String,
-      scopes: List[String]): F[GHResponse[Authorize]] =
+      scopes: List[String],
+      headers: Map[String, String] = Map()): F[GHResponse[Authorize]] =
     auth.authorizeUrl(client_id, redirect_uri, scopes)
 
   override def getAccessToken(
@@ -47,6 +46,7 @@ class AuthInterpreter[F[_]: Applicative] extends AuthAlg[F] {
       client_secret: String,
       code: String,
       redirect_uri: String,
-      state: String): F[GHResponse[OAuthToken]] =
-    auth.getAccessToken(client_id, client_secret, code, redirect_uri, state, Map())
+      state: String,
+      headers: Map[String, String] = Map()): F[GHResponse[OAuthToken]] =
+    auth.getAccessToken(client_id, client_secret, code, redirect_uri, state, headers)
 }

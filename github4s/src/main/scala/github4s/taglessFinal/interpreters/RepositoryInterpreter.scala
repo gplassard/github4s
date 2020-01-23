@@ -32,38 +32,37 @@ import github4s.taglessFinal.domain.{
   Status,
   User
 }
-import github4s.GithubDefaultUrls._
 
-class RepositoryInterpreter[F[_]: Applicative] extends RepositoryAlg[F] {
-  val repos = new Repos[F]()
-
-  override def getRepo(
+class RepositoryInterpreter[F[_]: Applicative](accessToken: Option[String] = None)(
+    implicit repos: Repos[F])
+    extends RepositoryAlg[F] {
+  override def get(
       owner: String,
       repo: String,
-      accessToken: Option[String]): F[GHResponse[Repository]] =
-    repos.get(accessToken, Map(), owner, repo)
+      headers: Map[String, String] = Map()): F[GHResponse[Repository]] =
+    repos.get(accessToken, headers, owner, repo)
 
   override def listOrgRepos(
       org: String,
       `type`: Option[String],
       pagination: Option[Pagination],
-      accessToken: Option[String]): F[GHResponse[List[Repository]]] =
-    repos.listOrgRepos(accessToken, Map(), org, `type`, pagination)
+      headers: Map[String, String] = Map()): F[GHResponse[List[Repository]]] =
+    repos.listOrgRepos(accessToken, headers, org, `type`, pagination)
 
   override def listUserRepos(
       user: String,
       `type`: Option[String],
       pagination: Option[Pagination],
-      accessToken: Option[String]): F[GHResponse[List[Repository]]] =
-    repos.listUserRepos(accessToken, Map(), user, `type`, pagination)
+      headers: Map[String, String] = Map()): F[GHResponse[List[Repository]]] =
+    repos.listUserRepos(accessToken, headers, user, `type`, pagination)
 
   override def getContents(
       owner: String,
       repo: String,
       path: String,
       ref: Option[String],
-      accessToken: Option[String]): F[GHResponse[NonEmptyList[Content]]] =
-    repos.getContents(accessToken, Map(), owner, repo, path, ref)
+      headers: Map[String, String] = Map()): F[GHResponse[NonEmptyList[Content]]] =
+    repos.getContents(accessToken, headers, owner, repo, path, ref)
 
   override def listCommits(
       owner: String,
@@ -74,29 +73,39 @@ class RepositoryInterpreter[F[_]: Applicative] extends RepositoryAlg[F] {
       since: Option[String],
       until: Option[String],
       pagination: Option[Pagination],
-      accessToken: Option[String]): F[GHResponse[List[Commit]]] =
-    repos.listCommits(accessToken, Map(), owner, repo, sha, path, author, since, until, pagination)
+      headers: Map[String, String] = Map()): F[GHResponse[List[Commit]]] =
+    repos.listCommits(
+      accessToken,
+      headers,
+      owner,
+      repo,
+      sha,
+      path,
+      author,
+      since,
+      until,
+      pagination)
 
   override def listBranches(
       owner: String,
       repo: String,
       `protected`: Option[Boolean],
-      accessToken: Option[String]): F[GHResponse[List[Branch]]] =
-    repos.listBranches(accessToken, Map(), owner, repo, `protected`)
+      headers: Map[String, String] = Map()): F[GHResponse[List[Branch]]] =
+    repos.listBranches(accessToken, headers, owner, repo, `protected`)
 
   override def listContributors(
       owner: String,
       repo: String,
       anon: Option[String],
-      accessToken: Option[String]): F[GHResponse[List[User]]] =
-    repos.listContributors(accessToken, Map(), owner, repo, anon)
+      headers: Map[String, String] = Map()): F[GHResponse[List[User]]] =
+    repos.listContributors(accessToken, headers, owner, repo, anon)
 
   override def listCollaborators(
       owner: String,
       repo: String,
       affiliation: Option[String],
-      accessToken: Option[String]): F[GHResponse[List[User]]] =
-    repos.listCollaborators(accessToken, Map(), owner, repo, affiliation)
+      headers: Map[String, String] = Map()): F[GHResponse[List[User]]] =
+    repos.listCollaborators(accessToken, headers, owner, repo, affiliation)
 
   override def createRelease(
       owner: String,
@@ -107,10 +116,10 @@ class RepositoryInterpreter[F[_]: Applicative] extends RepositoryAlg[F] {
       targetCommitish: Option[String],
       draft: Option[Boolean],
       prerelease: Option[Boolean],
-      accessToken: Option[String]): F[GHResponse[Release]] =
+      headers: Map[String, String] = Map()): F[GHResponse[Release]] =
     repos.createRelease(
       accessToken,
-      Map(),
+      headers,
       owner,
       repo,
       tagName,
@@ -124,15 +133,15 @@ class RepositoryInterpreter[F[_]: Applicative] extends RepositoryAlg[F] {
       owner: String,
       repo: String,
       ref: String,
-      accessToken: Option[String]): F[GHResponse[CombinedStatus]] =
-    repos.getStatus(accessToken, Map(), owner, repo, ref)
+      headers: Map[String, String] = Map()): F[GHResponse[CombinedStatus]] =
+    repos.getStatus(accessToken, headers, owner, repo, ref)
 
   override def listStatuses(
       owner: String,
       repo: String,
       ref: String,
-      accessToken: Option[String]): F[GHResponse[List[Status]]] =
-    repos.listStatuses(accessToken, Map(), owner, repo, ref)
+      headers: Map[String, String] = Map()): F[GHResponse[List[Status]]] =
+    repos.listStatuses(accessToken, headers, owner, repo, ref)
 
   override def createStatus(
       owner: String,
@@ -142,10 +151,10 @@ class RepositoryInterpreter[F[_]: Applicative] extends RepositoryAlg[F] {
       target_url: Option[String],
       description: Option[String],
       context: Option[String],
-      accessToken: Option[String]): F[GHResponse[Status]] =
+      headers: Map[String, String] = Map()): F[GHResponse[Status]] =
     repos.createStatus(
       accessToken,
-      Map(),
+      headers,
       owner,
       repo,
       sha,

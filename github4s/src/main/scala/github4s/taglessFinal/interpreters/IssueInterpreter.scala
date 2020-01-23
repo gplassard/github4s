@@ -29,30 +29,29 @@ import github4s.taglessFinal.domain.{
   SearchParam,
   User
 }
-import github4s.GithubDefaultUrls._
 
-class IssueInterpreter[F[_]: Applicative] extends IssuesAlg[F] {
-
-  val issues = new Issues[F]()
+class IssueInterpreter[F[_]: Applicative](accessToken: Option[String] = None)(
+    implicit issues: Issues[F])
+    extends IssuesAlg[F] {
 
   override def listIssues(
       owner: String,
       repo: String,
-      accessToken: Option[String]): F[GHResponse[List[Issue]]] =
-    issues.list(accessToken, Map(), owner, repo)
+      headers: Map[String, String] = Map()): F[GHResponse[List[Issue]]] =
+    issues.list(accessToken, headers, owner, repo)
 
   override def getIssue(
       owner: String,
       repo: String,
       number: Int,
-      accessToken: Option[String]): F[GHResponse[Issue]] =
-    issues.get(accessToken, Map(), owner, repo, number)
+      headers: Map[String, String] = Map()): F[GHResponse[Issue]] =
+    issues.get(accessToken, headers, owner, repo, number)
 
   override def searchIssues(
       query: String,
       searchParams: List[SearchParam],
-      accessToken: Option[String]): F[GHResponse[SearchIssuesResult]] =
-    issues.search(accessToken, Map(), query, searchParams)
+      headers: Map[String, String] = Map()): F[GHResponse[SearchIssuesResult]] =
+    issues.search(accessToken, headers, query, searchParams)
 
   override def createIssue(
       owner: String,
@@ -62,8 +61,8 @@ class IssueInterpreter[F[_]: Applicative] extends IssuesAlg[F] {
       milestone: Option[Int],
       labels: List[String],
       assignees: List[String],
-      accessToken: Option[String]): F[GHResponse[Issue]] =
-    issues.create(accessToken, Map(), owner, repo, title, body, milestone, labels, assignees)
+      headers: Map[String, String] = Map()): F[GHResponse[Issue]] =
+    issues.create(accessToken, headers, owner, repo, title, body, milestone, labels, assignees)
 
   override def editIssue(
       owner: String,
@@ -75,10 +74,10 @@ class IssueInterpreter[F[_]: Applicative] extends IssuesAlg[F] {
       milestone: Option[Int],
       labels: List[String],
       assignees: List[String],
-      accessToken: Option[String]): F[GHResponse[Issue]] =
+      headers: Map[String, String] = Map()): F[GHResponse[Issue]] =
     issues.edit(
       accessToken,
-      Map(),
+      headers,
       owner,
       repo,
       issue,
@@ -93,59 +92,59 @@ class IssueInterpreter[F[_]: Applicative] extends IssuesAlg[F] {
       owner: String,
       repo: String,
       number: Int,
-      accessToken: Option[String]): F[GHResponse[List[Comment]]] =
-    issues.listComments(accessToken, Map(), owner, repo, number)
+      headers: Map[String, String] = Map()): F[GHResponse[List[Comment]]] =
+    issues.listComments(accessToken, headers, owner, repo, number)
 
   override def createComment(
       owner: String,
       repo: String,
       number: Int,
       body: String,
-      accessToken: Option[String]): F[GHResponse[Comment]] =
-    issues.createComment(accessToken, Map(), owner, repo, number, body)
+      headers: Map[String, String] = Map()): F[GHResponse[Comment]] =
+    issues.createComment(accessToken, headers, owner, repo, number, body)
 
   override def editComment(
       owner: String,
       repo: String,
       id: Int,
       body: String,
-      accessToken: Option[String]): F[GHResponse[Comment]] =
-    issues.editComment(accessToken, Map(), owner, repo, id, body)
+      headers: Map[String, String] = Map()): F[GHResponse[Comment]] =
+    issues.editComment(accessToken, headers, owner, repo, id, body)
 
   override def deleteComment(
       owner: String,
       repo: String,
       id: Int,
-      accessToken: Option[String]): F[GHResponse[Unit]] =
-    issues.deleteComment(accessToken, Map(), owner, repo, id)
+      headers: Map[String, String] = Map()): F[GHResponse[Unit]] =
+    issues.deleteComment(accessToken, headers, owner, repo, id)
 
   override def listLabels(
       owner: String,
       repo: String,
       number: Int,
-      accessToken: Option[String]): F[GHResponse[List[Label]]] =
-    issues.listLabels(accessToken, Map(), owner, repo, number)
+      headers: Map[String, String] = Map()): F[GHResponse[List[Label]]] =
+    issues.listLabels(accessToken, headers, owner, repo, number)
 
   override def addLabels(
       owner: String,
       repo: String,
       number: Int,
       labels: List[String],
-      accessToken: Option[String]): F[GHResponse[List[Label]]] =
-    issues.addLabels(accessToken, Map(), owner, repo, number, labels)
+      headers: Map[String, String] = Map()): F[GHResponse[List[Label]]] =
+    issues.addLabels(accessToken, headers, owner, repo, number, labels)
 
   override def removeLabel(
       owner: String,
       repo: String,
       number: Int,
       label: String,
-      accessToken: Option[String]): F[GHResponse[List[Label]]] =
-    issues.removeLabel(accessToken, Map(), owner, repo, number, label)
+      headers: Map[String, String] = Map()): F[GHResponse[List[Label]]] =
+    issues.removeLabel(accessToken, headers, owner, repo, number, label)
 
   override def listAvailableAssignees(
       owner: String,
       repo: String,
       pagination: Option[Pagination],
-      accessToken: Option[String]): F[GHResponse[List[User]]] =
-    issues.listAvailableAssignees(accessToken, Map(), owner, repo, pagination)
+      headers: Map[String, String] = Map()): F[GHResponse[List[User]]] =
+    issues.listAvailableAssignees(accessToken, headers, owner, repo, pagination)
 }

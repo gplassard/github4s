@@ -30,5 +30,7 @@ abstract class UserAlg[F[_]] {
       pagination: Option[Pagination] = None,
       headers: Map[String, String] = Map()): F[GHResponse[List[User]]]
 
-  def getFollowing(username: String, headers: Map[String, String] = Map()): F[GHResponse[List[User]]]
+  def getFollowing(
+      username: String,
+      headers: Map[String, String] = Map()): F[GHResponse[List[User]]]
 }

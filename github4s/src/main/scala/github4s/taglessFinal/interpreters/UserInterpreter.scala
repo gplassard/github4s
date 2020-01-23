@@ -20,27 +20,26 @@ import cats.Applicative
 import github4s.GithubResponses.GHResponse
 import github4s.taglessFinal.algebra.UserAlg
 import github4s.taglessFinal.domain.{Pagination, User}
-import github4s.GithubDefaultUrls._
 import github4s.api.Users
 
-class UserInterpreter[F[_]: Applicative] extends UserAlg[F] {
+class UserInterpreter[F[_]: Applicative](accessToken: Option[String] = None)(
+    implicit user: Users[F])
+    extends UserAlg[F] {
 
-  val user = new Users[F]()
+  override def get(username: String, headers: Map[String, String] = Map()): F[GHResponse[User]] =
+    user.get(accessToken, headers, username)
 
-  override def getUser(username: String, accessToken: Option[String]): F[GHResponse[User]] =
-    user.get(accessToken = accessToken, username = username)
-
-  override def getAuthUser(accessToken: Option[String]): F[GHResponse[User]] =
-    user.getAuth(accessToken)
+  override def getAuth(headers: Map[String, String] = Map()): F[GHResponse[User]] =
+    user.getAuth(accessToken, headers)
 
   override def getUsers(
       since: Int,
       pagination: Option[Pagination],
-      accessToken: Option[String]): F[GHResponse[List[User]]] =
-    user.getUsers(accessToken = accessToken, since = since, pagination = pagination)
+      headers: Map[String, String] = Map()): F[GHResponse[List[User]]] =
+    user.getUsers(accessToken, headers, since, pagination)
 
   override def getFollowing(
       username: String,
-      accessToken: Option[String]): F[GHResponse[List[User]]] =
-    user.getFollowing(accessToken = accessToken, username = username)
+      headers: Map[String, String] = Map()): F[GHResponse[List[User]]] =
+    user.getFollowing(accessToken, headers, username)
 }

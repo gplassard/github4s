@@ -17,7 +17,7 @@
 package github4s.taglessFinal.algebra
 
 import github4s.GithubResponses.GHResponse
-import github4s.taglessFinal.domain.{Pagination,Stargazer, StarredRepository, Subscription}
+import github4s.taglessFinal.domain.{Pagination, Stargazer, StarredRepository, Subscription}
 
 abstract class ActivityAlg[F[_]] {
 
