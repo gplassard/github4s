@@ -32,24 +32,24 @@ import github4s.taglessFinal.domain.{
 
 abstract class RepositoryAlg[F[_]] {
 
-  def getRepo(
+  def get(
       owner: String,
       repo: String,
-      accessToken: Option[String] = None
+      headers: Map[String, String] = Map()
   ): F[GHResponse[Repository]]
 
   def listOrgRepos(
       org: String,
       `type`: Option[String] = None,
       pagination: Option[Pagination] = None,
-      accessToken: Option[String] = None
+      headers: Map[String, String] = Map()
   ): F[GHResponse[List[Repository]]]
 
   def listUserRepos(
       user: String,
       `type`: Option[String] = None,
       pagination: Option[Pagination] = None,
-      accessToken: Option[String] = None
+      headers: Map[String, String] = Map()
   ): F[GHResponse[List[Repository]]]
 
   def getContents(
@@ -57,7 +57,7 @@ abstract class RepositoryAlg[F[_]] {
       repo: String,
       path: String,
       ref: Option[String] = None,
-      accessToken: Option[String] = None
+      headers: Map[String, String] = Map()
   ): F[GHResponse[NonEmptyList[Content]]]
 
   def listCommits(
@@ -69,28 +69,28 @@ abstract class RepositoryAlg[F[_]] {
       since: Option[String] = None,
       until: Option[String] = None,
       pagination: Option[Pagination] = None,
-      accessToken: Option[String] = None
+      headers: Map[String, String] = Map()
   ): F[GHResponse[List[Commit]]]
 
   def listBranches(
       owner: String,
       repo: String,
       `protected`: Option[Boolean] = None,
-      accessToken: Option[String] = None
+      headers: Map[String, String] = Map()
   ): F[GHResponse[List[Branch]]]
 
   def listContributors(
       owner: String,
       repo: String,
       anon: Option[String] = None,
-      accessToken: Option[String] = None
+      headers: Map[String, String] = Map()
   ): F[GHResponse[List[User]]]
 
   def listCollaborators(
       owner: String,
       repo: String,
       affiliation: Option[String] = None,
-      accessToken: Option[String] = None
+      headers: Map[String, String] = Map()
   ): F[GHResponse[List[User]]]
 
   def createRelease(
@@ -102,21 +102,21 @@ abstract class RepositoryAlg[F[_]] {
       targetCommitish: Option[String] = None,
       draft: Option[Boolean] = None,
       prerelease: Option[Boolean] = None,
-      accessToken: Option[String] = None
+      headers: Map[String, String] = Map()
   ): F[GHResponse[Release]]
 
   def getCombinedStatus(
       owner: String,
       repo: String,
       ref: String,
-      accessToken: Option[String] = None
+      headers: Map[String, String] = Map()
   ): F[GHResponse[CombinedStatus]]
 
   def listStatuses(
       owner: String,
       repo: String,
       ref: String,
-      accessToken: Option[String] = None
+      headers: Map[String, String] = Map()
   ): F[GHResponse[List[Status]]]
 
   def createStatus(
@@ -127,6 +127,6 @@ abstract class RepositoryAlg[F[_]] {
       target_url: Option[String],
       description: Option[String],
       context: Option[String],
-      accessToken: Option[String] = None
+      headers: Map[String, String] = Map()
   ): F[GHResponse[Status]]
 }

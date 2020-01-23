@@ -18,14 +18,14 @@ package github4s.taglessFinal.interpreters
 
 import cats.Applicative
 import github4s.GithubResponses.GHResponse
-import github4s.api.MyUsers
 import github4s.taglessFinal.algebra.UserAlg
 import github4s.taglessFinal.domain.{Pagination, User}
 import github4s.GithubDefaultUrls._
+import github4s.api.Users
 
 class UserInterpreter[F[_]: Applicative] extends UserAlg[F] {
 
-  val user = new MyUsers[F]()
+  val user = new Users[F]()
 
   override def getUser(username: String, accessToken: Option[String]): F[GHResponse[User]] =
     user.get(accessToken = accessToken, username = username)

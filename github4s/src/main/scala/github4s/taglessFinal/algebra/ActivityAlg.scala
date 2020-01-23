@@ -25,14 +25,14 @@ abstract class ActivityAlg[F[_]] {
       id: Int,
       subscribed: Boolean,
       ignored: Boolean,
-      accessToken: Option[String] = None): F[GHResponse[Subscription]]
+      headers: Map[String, String] = Map()): F[GHResponse[Subscription]]
 
   def listStargazers(
       owner: String,
       repo: String,
       timeline: Boolean,
       pagination: Option[Pagination] = None,
-      accessToken: Option[String] = None): F[GHResponse[List[Stargazer]]]
+      headers: Map[String, String] = Map()): F[GHResponse[List[Stargazer]]]
 
   def listStarredRepositories(
       username: String,
@@ -40,6 +40,6 @@ abstract class ActivityAlg[F[_]] {
       sort: Option[String] = None,
       direction: Option[String] = None,
       pagination: Option[Pagination] = None,
-      accessToken: Option[String] = None): F[GHResponse[List[StarredRepository]]]
+      headers: Map[String, String] = Map()): F[GHResponse[List[StarredRepository]]]
 
 }

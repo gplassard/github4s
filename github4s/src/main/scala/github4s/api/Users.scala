@@ -24,10 +24,7 @@ import github4s.free.interpreters.Capture
 import io.circe.generic.auto._
 
 /** Factory to encapsulate calls related to Users operations  */
-class Users[M[_]: Applicative](
-    implicit urls: GithubApiUrls,
-    C: Capture[M],
-    httpClientImpl: HttpRequestBuilderExtension[M]) {
+class Users[M[_]: Applicative](implicit urls: GithubApiUrls) {
 
   val httpClient = new HttpClient[M]
 

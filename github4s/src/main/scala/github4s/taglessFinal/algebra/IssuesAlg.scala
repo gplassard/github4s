@@ -32,20 +32,20 @@ abstract class IssuesAlg[F[_]] {
   def listIssues(
       owner: String,
       repo: String,
-      accessToken: Option[String] = None
+      headers: Map[String, String] = Map()
   ): F[GHResponse[List[Issue]]]
 
   def getIssue(
       owner: String,
       repo: String,
       number: Int,
-      accessToken: Option[String] = None
+      headers: Map[String, String] = Map()
   ): F[GHResponse[Issue]]
 
   def searchIssues(
       query: String,
       searchParams: List[SearchParam],
-      accessToken: Option[String] = None
+      headers: Map[String, String] = Map()
   ): F[GHResponse[SearchIssuesResult]]
 
   def createIssue(
@@ -56,7 +56,7 @@ abstract class IssuesAlg[F[_]] {
       milestone: Option[Int],
       labels: List[String],
       assignees: List[String],
-      accessToken: Option[String] = None
+      headers: Map[String, String] = Map()
   ): F[GHResponse[Issue]]
 
   def editIssue(
@@ -69,14 +69,14 @@ abstract class IssuesAlg[F[_]] {
       milestone: Option[Int],
       labels: List[String],
       assignees: List[String],
-      accessToken: Option[String] = None
+      headers: Map[String, String] = Map()
   ): F[GHResponse[Issue]]
 
   def listComments(
       owner: String,
       repo: String,
       number: Int,
-      accessToken: Option[String] = None
+      headers: Map[String, String] = Map()
   ): F[GHResponse[List[Comment]]]
 
   def createComment(
@@ -84,7 +84,7 @@ abstract class IssuesAlg[F[_]] {
       repo: String,
       number: Int,
       body: String,
-      accessToken: Option[String] = None
+      headers: Map[String, String] = Map()
   ): F[GHResponse[Comment]]
 
   def editComment(
@@ -92,21 +92,21 @@ abstract class IssuesAlg[F[_]] {
       repo: String,
       id: Int,
       body: String,
-      accessToken: Option[String] = None
+      headers: Map[String, String] = Map()
   ): F[GHResponse[Comment]]
 
   def deleteComment(
       owner: String,
       repo: String,
       id: Int,
-      accessToken: Option[String] = None
+      headers: Map[String, String] = Map()
   ): F[GHResponse[Unit]]
 
   def listLabels(
       owner: String,
       repo: String,
       number: Int,
-      accessToken: Option[String] = None
+      headers: Map[String, String] = Map()
   ): F[GHResponse[List[Label]]]
 
   def addLabels(
@@ -114,7 +114,7 @@ abstract class IssuesAlg[F[_]] {
       repo: String,
       number: Int,
       labels: List[String],
-      accessToken: Option[String] = None
+      headers: Map[String, String] = Map()
   ): F[GHResponse[List[Label]]]
 
   def removeLabel(
@@ -122,13 +122,13 @@ abstract class IssuesAlg[F[_]] {
       repo: String,
       number: Int,
       label: String,
-      accessToken: Option[String] = None
+      headers: Map[String, String] = Map()
   ): F[GHResponse[List[Label]]]
 
   def listAvailableAssignees(
       owner: String,
       repo: String,
       pagination: Option[Pagination] = None,
-      accessToken: Option[String] = None
+      headers: Map[String, String] = Map()
   ): F[GHResponse[List[User]]]
 }

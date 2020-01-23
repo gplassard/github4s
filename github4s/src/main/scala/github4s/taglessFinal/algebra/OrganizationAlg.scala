@@ -26,11 +26,11 @@ abstract class OrganizationAlg[F[_]] {
       filter: Option[String] = None,
       role: Option[String] = None,
       pagination: Option[Pagination] = None,
-      accessToken: Option[String] = None): F[GHResponse[List[User]]]
+      headers: Map[String, String] = Map()): F[GHResponse[List[User]]]
 
   def listOutsideCollaborators(
       org: String,
       filter: Option[String] = None,
       pagination: Option[Pagination] = None,
-      accessToken: Option[String] = None): F[GHResponse[List[User]]]
+      headers: Map[String, String] = Map()): F[GHResponse[List[User]]]
 }

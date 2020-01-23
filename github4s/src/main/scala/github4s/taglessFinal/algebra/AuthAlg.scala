@@ -27,13 +27,15 @@ abstract class AuthAlg[F[_]] {
       scopes: List[String],
       note: String,
       client_id: String,
-      client_secret: String
+      client_secret: String,
+      headers: Map[String, String] = Map()
   ): F[GHResponse[Authorization]]
 
   def authorizeUrl(
       client_id: String,
       redirect_uri: String,
-      scopes: List[String]
+      scopes: List[String],
+      headers: Map[String, String] = Map()
   ): F[GHResponse[Authorize]]
 
   def getAccessToken(
@@ -41,6 +43,7 @@ abstract class AuthAlg[F[_]] {
       client_secret: String,
       code: String,
       redirect_uri: String,
-      state: String
+      state: String,
+      headers: Map[String, String] = Map()
   ): F[GHResponse[OAuthToken]]
 }

@@ -21,14 +21,14 @@ import github4s.taglessFinal.domain.{Pagination, User}
 
 abstract class UserAlg[F[_]] {
 
-  def getUser(username: String, accessToken: Option[String] = None): F[GHResponse[User]]
+  def get(username: String, headers: Map[String, String] = Map()): F[GHResponse[User]]
 
-  def getAuthUser(accessToken: Option[String] = None): F[GHResponse[User]]
+  def getAuth(headers: Map[String, String] = Map()): F[GHResponse[User]]
 
   def getUsers(
       since: Int,
       pagination: Option[Pagination] = None,
-      accessToken: Option[String] = None): F[GHResponse[List[User]]]
+      headers: Map[String, String] = Map()): F[GHResponse[List[User]]]
 
-  def getFollowing(username: String, accessToken: Option[String] = None): F[GHResponse[List[User]]]
+  def getFollowing(username: String, headers: Map[String, String] = Map()): F[GHResponse[List[User]]]
 }

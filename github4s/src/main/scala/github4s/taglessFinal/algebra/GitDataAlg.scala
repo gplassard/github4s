@@ -26,7 +26,7 @@ abstract class GitDataAlg[F[_]] {
       owner: String,
       repo: String,
       ref: String,
-      accessToken: Option[String] = None
+      headers: Map[String, String] = Map()
   ): F[GHResponse[NonEmptyList[Ref]]]
 
   def createReference(
@@ -34,7 +34,7 @@ abstract class GitDataAlg[F[_]] {
       repo: String,
       ref: String,
       sha: String,
-      accessToken: Option[String] = None
+      headers: Map[String, String] = Map()
   ): F[GHResponse[Ref]]
 
   def updateReference(
@@ -43,14 +43,14 @@ abstract class GitDataAlg[F[_]] {
       ref: String,
       sha: String,
       force: Boolean,
-      accessToken: Option[String] = None
+      headers: Map[String, String] = Map()
   ): F[GHResponse[Ref]]
 
   def getCommit(
       owner: String,
       repo: String,
       sha: String,
-      accessToken: Option[String] = None
+      headers: Map[String, String] = Map()
   ): F[GHResponse[RefCommit]]
 
   def createCommit(
@@ -60,7 +60,7 @@ abstract class GitDataAlg[F[_]] {
       tree: String,
       parents: List[String],
       author: Option[RefAuthor],
-      accessToken: Option[String] = None
+      headers: Map[String, String] = Map()
   ): F[GHResponse[RefCommit]]
 
   def createBlob(
@@ -68,7 +68,7 @@ abstract class GitDataAlg[F[_]] {
       repo: String,
       content: String,
       encoding: Option[String],
-      accessToken: Option[String] = None
+      headers: Map[String, String] = Map()
   ): F[GHResponse[RefInfo]]
 
   def getTree(
@@ -76,7 +76,7 @@ abstract class GitDataAlg[F[_]] {
       repo: String,
       sha: String,
       recursive: Boolean,
-      accessToken: Option[String] = None
+      headers: Map[String, String] = Map()
   ): F[GHResponse[TreeResult]]
 
   def createTree(
@@ -84,7 +84,7 @@ abstract class GitDataAlg[F[_]] {
       repo: String,
       baseTree: Option[String],
       treeDataList: List[TreeData],
-      accessToken: Option[String] = None
+      headers: Map[String, String] = Map()
   ): F[GHResponse[TreeResult]]
 
   def createTag(
@@ -95,6 +95,6 @@ abstract class GitDataAlg[F[_]] {
       objectSha: String,
       objectType: String,
       author: Option[RefAuthor],
-      accessToken: Option[String] = None
+      headers: Map[String, String] = Map()
   ): F[GHResponse[Tag]]
 }

@@ -28,51 +28,51 @@ import github4s.taglessFinal.domain.{
 
 abstract class PullRequestAlg[F[_]] {
 
-  def getPullRequest(
+  def get(
       owner: String,
       repo: String,
       number: Int,
-      accessToken: Option[String] = None
+      headers: Map[String, String] = Map()
   ): F[GHResponse[PullRequest]]
 
-  def listPullRequests(
+  def list(
       owner: String,
       repo: String,
       filters: List[PRFilter] = Nil,
-      accessToken: Option[String] = None,
+      headers: Map[String, String] = Map(),
       pagination: Option[Pagination] = None
   ): F[GHResponse[List[PullRequest]]]
 
-  def listPullRequestFiles(
+  def listFiles(
       owner: String,
       repo: String,
       number: Int,
-      accessToken: Option[String] = None,
+      headers: Map[String, String] = Map(),
       pagination: Option[Pagination] = None
   ): F[GHResponse[List[PullRequestFile]]]
 
-  def createPullRequest(
+  def create(
       owner: String,
       repo: String,
       newPullRequest: NewPullRequest,
       head: String,
       base: String,
       maintainerCanModify: Option[Boolean] = Some(true),
-      accessToken: Option[String] = None
+      headers: Map[String, String] = Map()
   ): F[GHResponse[PullRequest]]
 
-  def listPullRequestReviews(
+  def listReviews(
       owner: String,
       repo: String,
       pullRequest: Int,
-      accessToken: Option[String] = None,
+      headers: Map[String, String] = Map(),
       pagination: Option[Pagination] = None): F[GHResponse[List[PullRequestReview]]]
 
-  def getPullRequestReview(
+  def getReview(
       owner: String,
       repo: String,
       pullRequest: Int,
       review: Int,
-      accessToken: Option[String] = None): F[GHResponse[PullRequestReview]]
+      headers: Map[String, String] = Map()): F[GHResponse[PullRequestReview]]
 
 }

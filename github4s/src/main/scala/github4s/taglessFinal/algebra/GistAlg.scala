@@ -25,19 +25,19 @@ abstract class GistAlg[F[_]] {
       description: String,
       public: Boolean,
       files: Map[String, GistFile],
-      accessToken: Option[String] = None
+      headers: Map[String, String] = Map()
   ): F[GHResponse[Gist]]
 
   def getGist(
       gistId: String,
       sha: Option[String] = None,
-      accessToken: Option[String] = None
+      headers: Map[String, String] = Map()
   ): F[GHResponse[Gist]]
 
   def editGist(
       gistId: String,
       description: String,
       files: Map[String, Option[EditGistFile]],
-      accessToken: Option[String] = None
+      headers: Map[String, String] = Map()
   ): F[GHResponse[Gist]]
 }
