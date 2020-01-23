@@ -16,61 +16,30 @@
 
 package github4s
 
-import cats.data.{EitherT, Kleisli}
-import cats.MonadError
-import github4s.GithubResponses._
-import github4s.free.interpreters.Interpreters
-
-import scala.concurrent.Future
-import scala.language.higherKinds
-import cats.implicits._
 import github4s.taglessFinal.modules.GHWorkflow
+import scala.language.higherKinds
 
 /**
  * Represent the Github API wrapper
  * @param accessToken to identify the authenticated user
  */
-class Github(accessToken: Option[String] = None) {
-
-  lazy val users         = new GHUsers(accessToken)
-  lazy val repos         = new GHRepos(accessToken)
-  lazy val auth          = new GHAuth(accessToken)
-  lazy val gists         = new GHGists(accessToken)
-  lazy val issues        = new GHIssues(accessToken)
-  lazy val activities    = new GHActivities(accessToken)
-  lazy val gitData       = new GHGitData(accessToken)
-  lazy val pullRequests  = new GHPullRequests(accessToken)
-  lazy val organizations = new GHOrganizations(accessToken)
+class Github[F[_]](accessToken: Option[String] = None)(implicit git: GHWorkflow[F]) {
+  val users         = git.users
+  val repos         = git.repos
+  val auth          = git.auth
+  val gists         = git.gists
+  val issues        = git.issues
+  val activities    = git.activities
+  val gitData       = git.gitData
+  val pullRequests  = git.pullRequests
+  val organizations = git.organizations
 
 }
 
 /** Companion object for [[github4s.Github]] */
 object Github {
-  def apply(accessToken: Option[String] = None) = new Github(accessToken)
 
-  implicit class GithubIOSyntaxEither[A](gio: GHIO[GHResponse[A]]) {
-
-    def execK[M[_]](
-        implicit I: Interpreters[M],
-        A: MonadError[M, Throwable],
-        H: HttpRequestBuilderExtension[M]): Kleisli[M, Map[String, String], GHResponse[A]] =
-      gio foldMap I.interpreters
-
-    def exec[M[_]](headers: Map[String, String] = Map())(
-        implicit I: Interpreters[M],
-        A: MonadError[M, Throwable],
-        H: HttpRequestBuilderExtension[M]): M[GHResponse[A]] =
-      execK.run(headers)
-
-    def execFuture(headers: Map[String, String] = Map())(
-        implicit I: Interpreters[Future],
-        A: MonadError[Future, Throwable],
-        H: HttpRequestBuilderExtension[Future]): Future[GHResponse[A]] =
-      exec[Future](headers)
-
-    def liftGH: EitherT[GHIO, GHException, GHResult[A]] =
-      EitherT[GHIO, GHException, GHResult[A]](gio)
-
-  }
+  def apply[F[_]](accessToken: Option[String] = None)(implicit git: GHWorkflow[F]) =
+    new Github[F](accessToken)
 
 }

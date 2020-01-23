@@ -16,8 +16,6 @@
 
 package github4s.taglessFinal.domain
 
-import github4s.taglessFinal.domain.{Repository, User}
-
 case class Subscription(
     subscribed: Boolean,
     ignored: Boolean,

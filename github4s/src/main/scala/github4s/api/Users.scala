@@ -18,9 +18,8 @@ package github4s.api
 
 import cats.Applicative
 import github4s.GithubResponses.GHResponse
-import github4s.{GithubApiUrls, HttpClient, HttpRequestBuilderExtension}
+import github4s.{GithubApiUrls, HttpClient}
 import github4s.taglessFinal.domain.{Pagination, User}
-import github4s.free.interpreters.Capture
 import io.circe.generic.auto._
 
 /** Factory to encapsulate calls related to Users operations  */

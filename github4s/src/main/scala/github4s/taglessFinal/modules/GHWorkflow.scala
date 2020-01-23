@@ -16,6 +16,43 @@
 
 package github4s.taglessFinal.modules
 
-sealed trait GHWorkflow[F[_]] {}
+import cats.Applicative
+import github4s.api._
+import github4s.taglessFinal.algebra._
+import github4s.taglessFinal.interpreters._
+import github4s.GithubDefaultUrls._
 
-object GHWorkflow {}
+sealed trait GHWorkflow[F[_]] {
+  val users: UserAlg[F]
+  val repos: RepositoryAlg[F]
+  val auth: AuthAlg[F]
+  val gists: GistAlg[F]
+  val issues: IssuesAlg[F]
+  val activities: ActivityAlg[F]
+  val gitData: GitDataAlg[F]
+  val pullRequests: PullRequestAlg[F]
+  val organizations: OrganizationAlg[F]
+
+}
+
+class GithubAPI[F[_]: Applicative](accessToken: Option[String] = None) extends GHWorkflow[F] {
+  implicit val userHttp  = new Users[F]()
+  implicit val repoHttp  = new Repos[F]()
+  implicit val authHttp  = new Auth[F]()
+  implicit val gistHttp  = new Gists[F]()
+  implicit val issueHttp = new Issues[F]()
+  implicit val actHttp   = new Activities[F]()
+  implicit val dataHttp  = new GitData[F]()
+  implicit val pullHttp  = new PullRequests[F]()
+  implicit val orgHttp   = new Organizations[F]()
+
+  override val users: UserAlg[F]                 = new UserInterpreter[F](accessToken)
+  override val repos: RepositoryAlg[F]           = new RepositoryInterpreter[F](accessToken)
+  override val auth: AuthAlg[F]                  = new AuthInterpreter[F](accessToken)
+  override val gists: GistAlg[F]                 = new GistInterpreter[F](accessToken)
+  override val issues: IssuesAlg[F]              = new IssueInterpreter[F](accessToken)
+  override val activities: ActivityAlg[F]        = new ActivityInterpreter[F](accessToken)
+  override val gitData: GitDataAlg[F]            = new GitDataInterpreter[F](accessToken)
+  override val pullRequests: PullRequestAlg[F]   = new PullRequestInterpreter[F](accessToken)
+  override val organizations: OrganizationAlg[F] = new OrganizationInterpreter[F](accessToken)
+}
