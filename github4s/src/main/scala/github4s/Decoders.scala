@@ -19,7 +19,6 @@ package github4s
 import cats.data.NonEmptyList
 import cats.instances.either._
 import cats.instances.list._
-import cats.syntax.either._
 import cats.syntax.list._
 import cats.syntax.traverse._
 import github4s.taglessFinal.domain._

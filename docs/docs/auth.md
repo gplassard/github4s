@@ -15,11 +15,10 @@ with Github4s, you can:
 
 The following examples assume the following imports:
 
-```tut:silent
+```scala mdoc:silent
 import github4s.Github
 import github4s.Github._
-import github4s.jvm.Implicits._
-import scalaj.http.HttpResponse
+import github4s.implicits._
 ```
 
 **NOTE**: In the examples you will see `Github(None)`
@@ -94,7 +93,7 @@ You can get an access token using `getAccessToken`; it takes as arguments:
 - `redirect_uri`: the URL in your app where users will be sent after authorization.
 - `state`: the unguessable random string you optionally provided in [Create a new authorization token](#create-a-new-authorization-token).
 
-```tut:silent
+```scala mdoc:silent
 val getAccessToken = Github(None).auth.getAccessToken(
   "e8e39175648c9db8c280",
   "1234567890",

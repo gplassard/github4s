@@ -18,8 +18,9 @@ package github4s.unit
 
 import cats.free.Free
 import github4s.GithubResponses.{GHResponse, GHResult}
-import github4s.{GHAuth, HttpClient}
+import github4s.GHAuth
 import github4s.app.GitHub4s
+import github4s.free.algebra.AuthOps
 import github4s.free.domain._
 import github4s.utils.BaseSpec
 
@@ -30,7 +31,7 @@ class GHAuthSpec extends BaseSpec {
     val response: Free[GitHub4s, GHResponse[Authorization]] =
       Free.pure(Right(GHResult(authorization, okStatusCode, Map.empty)))
 
-    val authOps = mock[AuthOpsTest]
+    implicit val authOps: AuthOps[GitHub4s] = mock[AuthOpsTest]
     (authOps.newAuth _)
       .expects(
         validUsername,
@@ -41,7 +42,7 @@ class GHAuthSpec extends BaseSpec {
         invalidClientSecret)
       .returns(response)
 
-    val ghAuth = new GHAuth(None)(authOps)
+    val ghAuth = new GHAuth
     ghAuth.newAuth(
       validUsername,
       invalidPassword,
@@ -56,12 +57,12 @@ class GHAuthSpec extends BaseSpec {
     val response: Free[GitHub4s, GHResponse[OAuthToken]] =
       Free.pure(Right(GHResult(oAuthToken, okStatusCode, Map.empty)))
 
-    val authOps = mock[AuthOpsTest]
+    implicit val authOps: AuthOps[GitHub4s] = mock[AuthOpsTest]
     (authOps.getAccessToken _)
       .expects(validClientId, invalidClientSecret, validCode, validRedirectUri, validAuthState)
       .returns(response)
 
-    val ghAuth = new GHAuth(None)(authOps)
+    val ghAuth = new GHAuth
     ghAuth.getAccessToken(
       validClientId,
       invalidClientSecret,

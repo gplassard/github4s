@@ -17,19 +17,18 @@ with Github4s, you can interact with:
 
 The following examples assume the following imports and token:
 
-```tut:silent
+```scala mdoc:silent
 import github4s.Github
 import github4s.Github._
-import github4s.jvm.Implicits._
-import scalaj.http.HttpResponse
+import github4s.implicits._
 
 val accessToken = sys.env.get("GITHUB4S_ACCESS_TOKEN")
 ```
 
 They also make use of `cats.Id`, but any type container implementing `MonadError[M, Throwable]` will do.
 
-Support for `cats.Id`, `cats.Eval`, and `Future` (the only supported option for scala-js) are
-provided out of the box when importing `github4s.{js,jvm}.Implicits._`.
+Support for `cats.Id`, `cats.Eval`, and `Future` are
+provided out of the box when importing `github4s.implicits._`.
 
 ## Notifications
 
@@ -69,7 +68,7 @@ You can list the users starring a specific repository with `listStargazers`; it 
 
 To list the stargazers of 47deg/github4s:
 
-```tut:silent
+```scala mdoc:silent
 val listStargazers = Github(accessToken).activities.listStargazers("47deg", "github4s", true)
 listStargazers.exec[cats.Id]() match {
   case Left(e) => println(s"Something went wrong: ${e.getMessage}")
@@ -96,7 +95,7 @@ the repo was last pushed to), optional.
 
 To list the starred repositories for user `rafaparadela`:
 
-```tut:silent
+```scala mdoc:silent
 val listStarredRepositories = Github(accessToken).activities.listStarredRepositories("rafaparadela", true)
 listStarredRepositories.exec[cats.Id]() match {
   case Left(e) => println(s"Something went wrong: ${e.getMessage}")

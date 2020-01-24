@@ -29,11 +29,10 @@ with Github4s, you can interact with:
 
 The following examples assume the following imports and token:
 
-```tut:silent
+```scala mdoc:silent
 import github4s.Github
 import github4s.Github._
-import github4s.jvm.Implicits._
-import scalaj.http.HttpResponse
+import github4s.implicits._
 
 val accessToken = sys.env.get("GITHUB4S_ACCESS_TOKEN")
 ```
@@ -102,7 +101,7 @@ You can also list issues for a repository through `listIssues`; it takes as argu
 
 To list the issues for a repository:
 
-```tut:silent
+```scala mdoc:silent
 val listIssues = Github(accessToken).issues.listIssues("47deg", "github4s")
 
 listIssues.exec[cats.Id]() match {
@@ -126,7 +125,7 @@ You can also get a single issue of a repository through `getIssue`; it takes as 
 
 To get a single issue from a repository:
 
-```tut:silent
+```scala mdoc:silent
 val issue = Github(accessToken).issues.getIssue("47deg", "github4s", 123)
 
 issue.exec[cats.Id]() match {
@@ -152,7 +151,7 @@ arguments:
 Let's say we want to search for the Scala bugs (<https://github.com/scala/bug>) which contain
 the "existential" keyword in their title:
 
-```tut:silent
+```scala mdoc:silent
 import github4s.free.domain._
 val searchParams = List(
   OwnerParamInRepository("scala/bug"),
@@ -182,7 +181,7 @@ You can list comments of an issue with the following parameters:
 
  To list comments:
 
-```tut:silent
+```scala mdoc:silent
 val commentList = Github(accessToken).issues.listComments("47deg", "github4s", 123)
 commentList.exec[cats.Id]() match {
   case Left(e) => println(s"Something went wrong: ${e.getMessage}")
@@ -272,7 +271,7 @@ You can list labels for an issue with the following parameters:
 
  To list labels:
 
-```tut:silent
+```scala mdoc:silent
 val labelList = Github(accessToken).issues.listLabels("47deg", "github4s", 123)
 labelList.exec[cats.Id]() match {
   case Left(e) => println(s"Something went wrong: ${e.getMessage}")
@@ -294,7 +293,7 @@ You can add existing labels to an issue with the following parameters:
 
  To add existing labels to an issue:
 
-```tut:silent
+```scala mdoc:silent
 val assignedLabelList = Github(accessToken).issues.addLabels("47deg", "github4s", 123, List("bug", "code review"))
 assignedLabelList.exec[cats.Id]() match {
   case Left(e) => println(s"Something went wrong: ${e.getMessage}")
@@ -316,7 +315,7 @@ You can remove a label from an issue with the following parameters:
 
  To remove an existing label from an issue:
 
-```tut:silent
+```scala mdoc:silent
 val removedLabelList = Github(accessToken).issues.removeLabel("47deg", "github4s", 123, "bug")
 removedLabelList.exec[cats.Id]() match {
   case Left(e) => println(s"Something went wrong: ${e.getMessage}")
@@ -339,7 +338,7 @@ You can list available assignees for issues in repo with the following parameter
 
  To list available assignees:
 
-```tut:silent
+```scala mdoc:silent
 val assignees = Github(accessToken).issues.listAvailableAssignees("47deg", "github4s")
 assignees.exec[cats.Id]() match {
   case Left(e) => println(s"Something went wrong: ${e.getMessage}")

@@ -25,6 +25,7 @@ import github4s.taglessFinal.domain._
 
 /** Factory to encapsulate calls related to Activities operations  */
 class Activities[M[_]: Applicative](implicit urls: GithubApiUrls) {
+
   import Decoders._
 
   val httpClient = new HttpClient[M]

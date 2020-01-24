@@ -31,6 +31,9 @@ trait TestData extends DummyGithubUrls {
   val invalidUsername = "GHInvalidUserName"
   val invalidPassword = "invalidPassword"
 
+  val githubApiUrl = "http://api.github.com"
+  val user         = User(1, validUsername, githubApiUrl, githubApiUrl)
+
   def validBasicAuth = s"Basic ${s"$validUsername:".getBytes.toBase64}"
   def invalidBasicAuth =
     s"Basic ${s"$validUsername:$invalidPassword".getBytes.toBase64}"
@@ -95,8 +98,7 @@ trait TestData extends DummyGithubUrls {
   val validIssueLabel  = List("bug", "code review")
   val validAssignees   = List(validUsername)
 
-  val githubApiUrl = "http://api.github.com"
-  val encoding     = Some("utf-8")
+  val encoding = Some("utf-8")
 
   val validRefSingle   = "heads/master"
   val validRefMultiple = "heads/feature"
@@ -382,7 +384,6 @@ trait TestData extends DummyGithubUrls {
 
   val validTokenType = "bearer"
   val validAuthState = UUID.randomUUID().toString
-  val user           = User(1, validUsername, githubApiUrl, githubApiUrl)
 
   val authorization = Authorization(1, validRedirectUri, "token")
   val authorize     = Authorize(validRedirectUri, validAuthState)

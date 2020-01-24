@@ -23,10 +23,9 @@ import io.circe.generic.auto._
 import io.circe.syntax._
 import github4s.GithubResponses.GHResponse
 
-import scala.language.higherKinds
-
 /** Factory to encapsulate calls related to Repositories operations  */
 class Gists[M[_]: Applicative](implicit urls: GithubApiUrls) {
+
   import Decoders._
 
   val httpClient = new HttpClient[M]

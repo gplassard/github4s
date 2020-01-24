@@ -18,7 +18,7 @@ package github4s.integration
 
 import github4s.HttpRequestBuilderExtension
 import github4s.free.interpreters.{Capture, Interpreters}
-import github4s.jvm.ImplicitsJVM
+import github4s.InstancesAndInterpreters
 import github4s.utils.{BaseIntegrationSpec, TestUtilsJVM}
 
 import scala.concurrent.Future
@@ -32,7 +32,7 @@ class IntegrationSpec
     with GHReposSpec
     with GHUsersSpec
     with GHActivitiesSpec
-    with ImplicitsJVM
+    with InstancesAndInterpreters
     with TestUtilsJVM {
 
   override implicit def extension(

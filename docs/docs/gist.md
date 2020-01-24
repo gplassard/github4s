@@ -10,23 +10,19 @@ Github4s supports the [Gist API](https://developer.github.com/v3/gists/). As a r
 with Github4s, you can:
 
 - [Create a gist](#create-a-gist)
-- [Get a single gist or specific revision of a gist](#get-a-gist)
+- [Get a single gist or specific revision of a gist](#get-a-single-gist-or-specific-revision-of-a-gist)
+- [Edit a gist](#edit-a-gist)
 
 The following examples assume the following imports and token:
 
-```tut:silent
-import github4s.Github
-import github4s.Github._
-import github4s.jvm.Implicits._
-import scalaj.http.HttpResponse
-
+```scala mdoc:silent
 val accessToken = sys.env.get("GITHUB4S_ACCESS_TOKEN")
 ```
 
 They also make use of `cats.Id` but any type container implementing `MonadError[M, Throwable]` will do.
 
-Support for `cats.Id`, `cats.Eval`, and `Future` (the only supported option for scala-js) are
-provided out of the box when importing `github4s.{js,jvm}.Implicits._`.
+Support for `cats.Id`, `cats.Eval`, and `Future` are
+provided out of the box when importing `github4s.implicits._`.
 
 ## Create a gist
 

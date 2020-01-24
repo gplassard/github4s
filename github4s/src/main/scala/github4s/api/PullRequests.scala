@@ -20,10 +20,9 @@ import cats.Applicative
 import github4s.GithubResponses.GHResponse
 import github4s.taglessFinal.domain._
 import github4s.{Decoders, Encoders, GithubApiUrls, HttpClient}
+
 import io.circe.generic.auto._
 import io.circe.syntax._
-
-import scala.language.higherKinds
 
 /** Factory to encapsulate calls related to PullRequests operations  */
 class PullRequests[M[_]: Applicative](implicit urls: GithubApiUrls) {

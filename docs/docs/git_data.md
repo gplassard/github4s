@@ -24,11 +24,10 @@ please read the [Git Internals](https://git-scm.com/book/en/v1/Git-Internals) ch
 
 The following examples assume the following imports and token:
 
-```tut:silent
+```scala mdoc:silent
 import github4s.Github
 import github4s.Github._
-import github4s.jvm.Implicits._
-import scalaj.http.HttpResponse
+import github4s.implicits._
 
 val accessToken = sys.env.get("GITHUB4S_ACCESS_TOKEN")
 ```
@@ -51,11 +50,11 @@ You can get a reference using `getReference`, it takes as arguments:
 - the repository coordinates (`owner` and `name` of the repository).
 - `ref`: ref formatted as `heads/branch`.
 
-```tut:silent
+```scala mdoc:silent
 val getReference = Github(accessToken).gitData.getReference("47deg", "github4s", "heads/master")
 
 getReference.exec[cats.Id]() match {
-  case Left(e) => println(s"Something went wrong: s{e.getMessage}")
+  case Left(e) => println(s"Something went wrong: ${e.getMessage}")
   case Right(r) => println(r.result)
 }
 ```
@@ -131,7 +130,7 @@ You can get a commit using `getCommit`; it takes as arguments:
 - the repository coordinates (`owner` and `name` of the repository).
 - `sha`: the sha of the commit.
 
-```tut:silent
+```scala mdoc:silent
 val getCommit = Github(accessToken).gitData.getCommit("47deg", "github4s", "d3b048c1f500ee5450e5d7b3d1921ed3e7645891")
 
 getCommit.exec[cats.Id]() match {
@@ -216,10 +215,10 @@ You can get a tree using `getTree`; it takes as arguments:
 - `sha`: the sha of the commit.
 - `recursive`: flag whether to get the tree recursively.
 
-```tut:silent
-val getCommit = Github(accessToken).gitData.getTree("47deg", "github4s", "d3b048c1f500ee5450e5d7b3d1921ed3e7645891",true)
+```scala mdoc:silent
+val getTree = Github(accessToken).gitData.getTree("47deg", "github4s", "d3b048c1f500ee5450e5d7b3d1921ed3e7645891",true)
 
-getCommit.exec[cats.Id]() match {
+getTree.exec[cats.Id]() match {
   case Left(e) => println(s"Something went wrong: ${e.getMessage}")
   case Right(r) => println(r.result)
 }

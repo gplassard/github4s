@@ -16,18 +16,18 @@ appropriate scopes (i.e. if you want to create gists, your token will need to ha
 First things first, we'll need to import `github4s.Github` which is the entry point to the Github
 API in Github4s.
 
-```tut:silent
+```scala mdoc:silent
 import github4s.Github
+import github4s.Github._
 ```
 
-In order for Github4s to work in both JVM and scala-js environments, you'll need to place different
-implicits in your scope, depending on your needs:
+In order for Github4s to work, you'll need the appropriate implicits in your scope:
 
-```tut:silent
-import github4s.jvm.Implicits._
+```scala
+import github4s.implicits._
 ```
 
-```tut:invisible
+```scala mdoc:invisible
 val accessToken = sys.env.get("GITHUB4S_ACCESS_TOKEN")
 ```
 
@@ -45,90 +45,85 @@ case class GHResult[A](result: A, statusCode: Int, headers: Map[String, IndexedS
 
 As an introductory example, we can get a user with the following:
 
-```tut:silent
+```scala mdoc:silent
 val user1 = Github(accessToken).users.get("rafaparadela")
 ```
 
 `user1` in this case is a `GHIO[GHResponse[User]]` which we can run (`foldMap`) with
-`exec[M[_], C]` where `M[_]` that represents any type container that implements
-`MonadError[M, Throwable]` (for instance `cats.Eval`) and `C` represents a valid implementation of
-an [HttpClient][http-client].
+`exec[M[_]]` where `M[_]` that represents any type container that implements
+`MonadError[M, Throwable]` (for instance `cats.Eval`).
 
 A few examples follow with different `MonadError[M, Throwable]`.
 
 ### Using `cats.Eval`
 
-```tut:silent
-import cats.Eval
-import github4s.Github._
-import scalaj.http.HttpResponse
-
+```scala mdoc:silent
 object ProgramEval {
-  val u1 = user1.exec[Eval]().value
+  import github4s.implicits._
+  val u1 = user1.exec[cats.Eval]().value
 }
 ```
 
 As mentioned above, `u1` should have an `GHResult[User]` in the right.
 
-```tut:silent
-import cats.implicits._
+```scala mdoc:silent
 import github4s.GithubResponses.GHResult
-
 ProgramEval.u1 match {
-  case Right(GHResult(result, status, headers)) => result.login
+  case Right(GHResult(result, status@_, headers@_)) => result.login
   case Left(e) => e.getMessage
 }
 ```
 
 ### Using `cats.Id`
 
-```tut:silent
-import cats.Id
-
+```scala mdoc:silent
 object ProgramId {
-  val u2 = Github(accessToken).users.get("raulraja").exec[Id]()
+  import github4s.implicits._
+  val u2 = Github(accessToken).users.get("raulraja").exec[cats.Id]()
 }
 ```
 
 ### Using `Future`
 
-```tut:silent
-import scala.concurrent.Future
-import scala.concurrent.ExecutionContext.Implicits.global
-import scala.concurrent.duration._
-import scala.concurrent.Await
-
+```scala mdoc:silent
 object ProgramFuture {
-  // execFuture[C] is a shortcut for exec[Future, C]
+  import scala.concurrent.ExecutionContext.Implicits.global
+  import scala.concurrent.duration._
+  import scala.concurrent.Await
+  import github4s.implicits._
+
+  // execFuture is a shortcut for exec[Future]
   val u3 = Github(accessToken).users.get("dialelo").execFuture()
   Await.result(u3, 2.seconds)
 }
 ```
 
-### Using `cats.effect.{Async, Sync}`
+### Using `cats.effect.Sync`
 
-On the JVM, you can use any `cats.effect.Sync`, here we're using `cats.effect.IO`:
-```tut:silent
-import cats.effect.IO
-import github4s.cats.effect.jvm.Implicits._
+We can use any `cats.effect.Sync`, here we're using `cats.effect.IO`:
 
-object ProgramTask {
+```scala mdoc:silent
+object ProgramSync {
+  import cats.effect.IO
+  import github4s.cats.effect.implicits._
+
   val u5 = Github(accessToken).users.get("juanpedromoreno").exec[IO]()
   u5.unsafeRunSync
 }
 ```
 
-Note that you'll need a dependency to the `github4s-cats-effect` package to leverage
+Note that you'll need a dependency to the `github4s-cats-effect` package to leverage the
 cats-effect integration.
 
 ## Specifying custom headers
 
 The different `exec` methods let users include custom headers for any Github API request:
 
-```tut:silent
-object ProgramEval {
+```scala mdoc:silent
+object ProgramEvalWithHeaders {
+  import github4s.implicits._
   val userHeaders = Map("user-agent" -> "github4s")
-  val user1 = Github(accessToken).users.get("rafaparadela").exec[Eval](userHeaders).value
+  val user1 = Github(accessToken).users.get("rafaparadela").exec[cats.Eval](userHeaders).value
 }
 ```
 

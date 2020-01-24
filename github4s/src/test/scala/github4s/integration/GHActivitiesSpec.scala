@@ -18,9 +18,8 @@ package github4s.integration
 
 import github4s.Github
 import github4s.Github._
-import github4s.free.domain.{Stargazer, StarredRepository}
-import github4s.implicits._
 import github4s.taglessFinal.domain.{Stargazer, StarredRepository, Subscription}
+
 import github4s.utils.{BaseIntegrationSpec, Integration}
 
 trait GHActivitiesSpec extends BaseIntegrationSpec {

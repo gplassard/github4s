@@ -16,19 +16,18 @@ with Github4s, you can interact with:
 
 The following examples assume the following imports and token:
 
-```tut:silent
+```scala mdoc:silent
 import github4s.Github
 import github4s.Github._
-import github4s.jvm.Implicits._
-import scalaj.http.HttpResponse
+import github4s.implicits._
 
 val accessToken = sys.env.get("GITHUB4S_ACCESS_TOKEN")
 ```
 
 They also make use of `cats.Id`, but any type container implementing `MonadError[M, Throwable]` will do.
 
-Support for `cats.Id`, `cats.Eval`, and `Future` (the only supported option for scala-js) are
-provided out of the box when importing `github4s.{js,jvm}.Implicits._`.
+Support for `cats.Id`, `cats.Eval`, and `Future` are
+provided out of the box when importing `github4s.implicits._`.
 
 ## Members
 
@@ -43,7 +42,7 @@ You can list the members for a particular organization with `listMembers`; it ta
 
 To list the members for organization `47deg`:
 
-```tut:silent
+```scala mdoc:silent
 val listMembers = Github(accessToken).organizations.listMembers("47deg")
 listMembers.exec[cats.Id]() match {
   case Left(e) => println(s"Something went wrong: ${e.getMessage}")
@@ -67,7 +66,7 @@ You can list the outside collaborators of your organization with `listOutsideCol
 
 To list the outside collaborators for organization `47deg`:
 
-```tut:silent
+```scala mdoc:silent
 val outsideCollaborators = Github(accessToken).organizations.listOutsideCollaborators("47deg")
 outsideCollaborators.exec[cats.Id]() match {
   case Left(e) => println(s"Something went wrong: ${e.getMessage}")
