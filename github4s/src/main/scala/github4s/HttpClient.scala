@@ -17,18 +17,17 @@
 package github4s
 
 import cats.Applicative
+import cats.effect.{ContextShift, IO, Timer}
 import github4s.taglessFinal.domain.Pagination
 import io.circe.Decoder
-import github4s.GithubResponses.{
-  GHResponse,
-  GHResult,
-  JsonParsingException,
-  UnsuccessfulHttpRequest
-}
+import github4s.GithubResponses.{GHResponse, GHResult, JsonParsingException, UnsuccessfulHttpRequest}
 import github4s.HttpClient._
 import io.circe.jackson.parse
-import scalaj.http.{Http, HttpOptions, HttpRequest, HttpResponse}
 import cats.implicits._
+import org.http4s.client._
+import org.http4s.client.blaze._
+
+import scala.concurrent.ExecutionContext.Implicits.global
 
 object HttpClient {
   type Headers = Map[String, String]
@@ -71,6 +70,21 @@ object HttpClient {
 }
 
 class HttpExec[M[_]: Applicative] {
+
+
+  private[this] def myrunMap[A](rb: HttpRequestBuilder[M]): Unit = {
+    implicit val cs: ContextShift[IO] = IO.contextShift(global)
+    implicit val timer: Timer[IO] = IO.timer(global)
+    BlazeClientBuilder[IO](global)
+      .withConnectTimeout(1000)
+      .resource.use({ client =>
+        client.run()
+
+    })
+  }
+
+
+  ///
   def run[A](rb: HttpRequestBuilder[M])(implicit D: Decoder[A]): M[GHResponse[A]] =
     runMap[A](rb, decodeEntity[A])
 

@@ -30,7 +30,7 @@ object ProjectPlugin extends AutoPlugin {
       val simulacrum: String   = "0.19.0"
       val scala212: String     = "2.12.10"
       val scala213: String     = "2.13.1"
-      val scalaj: String       = "2.4.2"
+      val http4s: String       = "0.20.16"
       val scalamock: String    = "4.4.0"
       val scalaTest: String    = "3.1.0"
     }
@@ -71,7 +71,7 @@ object ProjectPlugin extends AutoPlugin {
         %%("circe-generic", V.circe),
         "io.circe" %% "circe-jackson28" % V.circeJackson,
         %%("base64", V.base64),
-        %%("scalaj", V.scalaj),
+        "org.http4s" %% "http4s-blaze-client" % V.http4s,
         %%("circe-parser", V.circe)  % Test,
         %%("scalamock", V.scalamock) % Test,
         %%("scalatest", V.scalaTest) % Test,

@@ -16,7 +16,7 @@
 
 package github4s
 
-import github4s.taglessFinal.modules.GHWorkflow
+import github4s.taglessFinal.modules._
 import scala.language.higherKinds
 
 /**
