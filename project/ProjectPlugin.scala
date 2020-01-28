@@ -72,6 +72,7 @@ object ProjectPlugin extends AutoPlugin {
         "io.circe" %% "circe-jackson28" % V.circeJackson,
         %%("base64", V.base64),
         "org.http4s" %% "http4s-blaze-client" % V.http4s,
+        "org.http4s" %% "http4s-circe" % V.http4s,
         %%("circe-parser", V.circe)  % Test,
         %%("scalamock", V.scalamock) % Test,
         %%("scalatest", V.scalaTest) % Test,

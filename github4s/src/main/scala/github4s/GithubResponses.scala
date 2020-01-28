@@ -20,7 +20,7 @@ object GithubResponses {
 
   type GHResponse[A] = Either[GHException, GHResult[A]]
 
-  case class GHResult[A](result: A, statusCode: Int, headers: Map[String, IndexedSeq[String]])
+  case class GHResult[A](result: A, statusCode: Int, headers: Map[String, String])
 
   sealed abstract class GHException(msg: String, cause: Option[Throwable] = None)
       extends Throwable(msg) {

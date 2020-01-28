@@ -16,79 +16,31 @@
 
 package github4s
 
-import cats.Applicative
-import cats.effect.{ContextShift, IO, Timer}
+import java.util.concurrent.TimeUnit
+
+import cats.effect.{ConcurrentEffect, ContextShift, IO, Timer}
 import github4s.taglessFinal.domain.Pagination
-import io.circe.Decoder
+import io.circe.{Decoder, Encoder, Json}
 import github4s.GithubResponses.{
+  GHException,
   GHResponse,
   GHResult,
   JsonParsingException,
   UnsuccessfulHttpRequest
 }
-import github4s.HttpClient._
 import io.circe.jackson.parse
 import cats.implicits._
-import org.http4s.client._
+import org.http4s._
 import org.http4s.client.blaze._
+import org.http4s.MediaType
+import org.http4s.circe._
+import org.http4s.headers.`Content-Type`
 
-import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.ExecutionContext
+import scala.concurrent.duration.Duration
 
-object HttpClient {
-  type Headers = Map[String, String]
+class HttpExec[M[_]: ConcurrentEffect](implicit u: GithubApiUrls) {
 
-  sealed trait HttpVerb {
-    def verb: String
-  }
-
-  case object Get extends HttpVerb {
-    def verb = "GET"
-  }
-
-  case object Post extends HttpVerb {
-    def verb = "POST"
-  }
-
-  case object Put extends HttpVerb {
-    def verb = "PUT"
-  }
-
-  case object Delete extends HttpVerb {
-    def verb = "DELETE"
-  }
-
-  case object Patch extends HttpVerb {
-    def verb = "PATCH"
-  }
-
-  sealed trait HttpStatus {
-    def statusCode: Int
-  }
-
-  case object HttpCode200 extends HttpStatus {
-    def statusCode = 200
-  }
-
-  case object HttpCode299 extends HttpStatus {
-    def statusCode = 299
-  }
-}
-
-class HttpExec[M[_]: Applicative] {
-
-  private[this] def myrunMap[A](rb: HttpRequestBuilder[M]): Unit = {
-    implicit val cs: ContextShift[IO] = IO.contextShift(global)
-    implicit val timer: Timer[IO]     = IO.timer(global)
-    BlazeClientBuilder[IO](global)
-      .withConnectTimeout(1000)
-      .resource
-      .use({ client =>
-        client.run()
-
-      })
-  }
-
-  ///
   def run[A](rb: HttpRequestBuilder[M])(implicit D: Decoder[A]): M[GHResponse[A]] =
     runMap[A](rb, decodeEntity[A])
 
@@ -97,63 +49,86 @@ class HttpExec[M[_]: Applicative] {
 
   private[this] def runMap[A](
       rb: HttpRequestBuilder[M],
-      mapResponse: HttpResponse[String] => GHResponse[A]): M[GHResponse[A]] = {
+      mapResponse: Response[M] => M[GHResponse[A]]): M[GHResponse[A]] = {
 
-    val connTimeoutMs: Int = 1000
-    val readTimeoutMs: Int = 5000
+    val connTimeout: Duration = Duration(1000l, TimeUnit.MILLISECONDS)
+    val readTimeoutMs: Int    = 5000 ///TODO where to add this parameter to client?
 
-    val params = rb.params.map {
-      case (key, value) => s"$key=$value"
-    } mkString ("?", "&", "")
+    //TODO propogate proper header types instead of doing this conversion? Same for params.
+    val headerList: List[Header] = (rb.headers.map({ kv =>
+      Header(kv._1, kv._2)
+    }) ++ rb.authHeader.map({ kv =>
+      Header(kv._1, kv._2)
+    })).toList
 
-    val request = Http(url = rb.url)
-      .method(rb.httpVerb.verb)
-      .option(HttpOptions.connTimeout(connTimeoutMs))
-      .option(HttpOptions.readTimeout(readTimeoutMs))
-      .params(rb.params)
-      .headers(rb.authHeader)
-      .headers(rb.headers)
-      .copy(urlBuilder = (req: HttpRequest) => s"${req.url}$params")
-    rb.data match {
-      case Some(d) =>
-        (
-          toEntity[A](
-            request
-              .postData(d)
-              .method(rb.httpVerb.verb)
-              .header("content-type", "application/json")
-              .asString,
-            mapResponse)
-        ).pure[M]
-      case _ => (toEntity[A](request.asString, mapResponse).pure[M])
+    val request: Request[M] = {
+      val req = Request[M]()
+        .withMethod(rb.httpVerb)
+        .withUri(
+          Uri.fromString(rb.url).getOrElse(uri"https://api.github.com/") =? (rb.params.map(kv =>
+            (kv._1, List(kv._2))))) //TODO handle url parsing errors without defaulting
+        .withHeaders(headerList: _*)
+
+      rb.data match {
+        case Some(d) =>
+          req.withContentType(`Content-Type`(MediaType.application.json)).withEntity(d)
+        case _ => req
+      }
     }
+
+    // TODO BlazeClient requires F: ConcurrentEffect which requries F:ContextShift. How to handle case where F != IO?
+    import scala.concurrent.ExecutionContext.Implicits.global
+    implicit val timer: Timer[IO]     = cats.effect.IO.timer(global)
+    implicit val cs: ContextShift[IO] = cats.effect.IO.contextShift(global)
+
+    BlazeClientBuilder[M](global)
+      .withConnectTimeout(connTimeout)
+      .resource
+      .use({ client =>
+        client.fetch(request)(mapResponse) // TODO Chose: fetch with mapResponse refactored to parse streams OR client.expect[A]
+      })
   }
 
   def toEntity[A](
-      response: HttpResponse[String],
-      mapResponse: (HttpResponse[String]) => GHResponse[A]): GHResponse[A] =
+      response: Response[M],
+      mapReponse: (Response[M] => M[GHResponse[A]])): M[GHResponse[A]] =
     response match {
-      case r if r.isSuccess =>
-        mapResponse(r)
+      case r if r.status.code == 200 =>
+        mapReponse(r)
       case r =>
-        Either.left(
-          UnsuccessfulHttpRequest(
-            s"Failed invoking with status : ${r.code} body : \n ${r.body}",
-            r.code
+        Either
+          .left[GHException, GHResult[A]](
+            UnsuccessfulHttpRequest(
+              s"Failed invoking with status : ${r.status} body : \n ${r.body.toString()}",
+              r.status.code
+            )
           )
-        )
+          .pure[M]
     }
 
-  def emptyResponse(r: HttpResponse[String]): GHResponse[Unit] =
-    Either.right(GHResult((): Unit, r.code, toLowerCase(r.headers)))
+  def emptyResponse(r: Response[M]): M[GHResponse[Unit]] =
+    Either
+      .right[GHException, GHResult[Unit]](
+        GHResult((): Unit, r.status.code, headersToMap(r.headers)))
+      .pure[M]
 
-  def decodeEntity[A](r: HttpResponse[String])(implicit D: Decoder[A]): GHResponse[A] =
-    parse(r.body)
+  def decodeEntity[A](r: Response[M])(implicit D: Decoder[A]): M[GHResponse[A]] = {
+    println(r.body.getClass())
+    parse(r.body.toString()) //TODO parsing as a stream
       .flatMap(_.as[A])
-      .bimap(
-        e => JsonParsingException(e.getMessage, r.body),
-        result => GHResult(result, r.code, toLowerCase(r.headers))
+      .bimap[GHException, GHResult[A]](
+        e => JsonParsingException(e.getMessage, r.body.toString()),
+        result => GHResult(result, r.status.code, headersToMap(r.headers))
       )
+      .pure[M]
+  }
+
+  private def headersToMap(headers: Headers): Map[String, String] =
+    headers.toList
+      .map({ h =>
+        (h.name.toString().toLowerCase(), h.value)
+      })
+      .toMap
 
   private def toLowerCase(
       headers: Map[String, IndexedSeq[String]]): Map[String, IndexedSeq[String]] =
@@ -162,20 +137,21 @@ class HttpExec[M[_]: Applicative] {
 
 class HttpRequestBuilder[M[_]](
     val url: String,
-    val httpVerb: HttpVerb = Get,
+    val httpVerb: Method = Method.GET,
     val authHeader: Map[String, String] = Map.empty[String, String],
     val data: Option[String] = None,
     val params: Map[String, String] = Map.empty[String, String],
     val headers: Map[String, String] = Map.empty[String, String]
 ) {
 
-  def postMethod = new HttpRequestBuilder[M](url, Post, authHeader, data, params, headers)
+  def postMethod = new HttpRequestBuilder[M](url, Method.POST, authHeader, data, params, headers)
 
-  def patchMethod = new HttpRequestBuilder[M](url, Patch, authHeader, data, params, headers)
+  def patchMethod = new HttpRequestBuilder[M](url, Method.PATCH, authHeader, data, params, headers)
 
-  def putMethod = new HttpRequestBuilder[M](url, Put, authHeader, data, params, headers)
+  def putMethod = new HttpRequestBuilder[M](url, Method.PUT, authHeader, data, params, headers)
 
-  def deleteMethod = new HttpRequestBuilder[M](url, Delete, authHeader, data, params, headers)
+  def deleteMethod =
+    new HttpRequestBuilder[M](url, Method.DELETE, authHeader, data, params, headers)
 
   def withAuth(accessToken: Option[String] = None) = {
     val authHeader = accessToken match {
@@ -198,7 +174,7 @@ class HttpRequestBuilder[M[_]](
 object HttpRequestBuilder {
   def httpRequestBuilder[M[_]](
       url: String,
-      httpVerb: HttpVerb = Get,
+      httpVerb: Method = Method.GET,
       authHeader: Map[String, String] = Map.empty[String, String],
       data: Option[String] = None,
       params: Map[String, String] = Map.empty[String, String],
@@ -206,7 +182,7 @@ object HttpRequestBuilder {
   ) = new HttpRequestBuilder[M](url, httpVerb, authHeader, data, params, headers)
 }
 
-class HttpClient[M[_]: Applicative](implicit urls: GithubApiUrls) {
+class HttpClient[M[_]: ConcurrentEffect](implicit urls: GithubApiUrls) {
   import HttpRequestBuilder._
 
   val defaultPagination = Pagination(1, 1000)
