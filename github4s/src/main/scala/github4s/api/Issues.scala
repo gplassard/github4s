@@ -17,6 +17,7 @@
 package github4s.api
 
 import cats.Applicative
+import cats.effect.ConcurrentEffect
 import github4s.GithubResponses.GHResponse
 import github4s.{GithubApiUrls, HttpClient}
 import github4s.taglessFinal.domain._
@@ -25,7 +26,7 @@ import io.circe.syntax._
 import io.circe.generic.auto._
 
 /** Factory to encapsulate calls related to Issues operations  */
-class Issues[M[_]: Applicative](implicit urls: GithubApiUrls) {
+class Issues[M[_]: ConcurrentEffect](implicit urls: GithubApiUrls) {
 
   val httpClient = new HttpClient[M]
 

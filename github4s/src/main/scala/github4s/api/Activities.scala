@@ -16,7 +16,7 @@
 
 package github4s.api
 
-import cats.Applicative
+import cats.effect.ConcurrentEffect
 import github4s.GithubResponses.GHResponse
 import github4s._
 import io.circe.syntax._
@@ -24,7 +24,7 @@ import io.circe.generic.auto._
 import github4s.taglessFinal.domain._
 
 /** Factory to encapsulate calls related to Activities operations  */
-class Activities[M[_]: Applicative](implicit urls: GithubApiUrls) {
+class Activities[M[_]: ConcurrentEffect](implicit urls: GithubApiUrls) {
 
   import Decoders._
 

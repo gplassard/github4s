@@ -16,6 +16,7 @@
 
 package github4s
 
+import cats.effect.ConcurrentEffect
 import github4s.taglessFinal.modules._
 import scala.language.higherKinds
 
@@ -23,7 +24,8 @@ import scala.language.higherKinds
  * Represent the Github API wrapper
  * @param accessToken to identify the authenticated user
  */
-class Github[F[_]](accessToken: Option[String] = None)(implicit git: GHWorkflow[F]) {
+class Github[F[_]: ConcurrentEffect](accessToken: Option[String] = None)(
+    implicit git: GHWorkflow[F]) {
   val users         = git.users
   val repos         = git.repos
   val auth          = git.auth
@@ -39,7 +41,8 @@ class Github[F[_]](accessToken: Option[String] = None)(implicit git: GHWorkflow[
 /** Companion object for [[github4s.Github]] */
 object Github {
 
-  def apply[F[_]](accessToken: Option[String] = None)(implicit git: GHWorkflow[F]) =
+  def apply[F[_]: ConcurrentEffect](accessToken: Option[String] = None)(
+      implicit git: GHWorkflow[F]) =
     new Github[F](accessToken)
 
 }

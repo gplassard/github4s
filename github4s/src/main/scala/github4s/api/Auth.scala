@@ -18,7 +18,7 @@ package github4s.api
 
 import java.util.UUID
 
-import cats.Applicative
+import cats.effect.ConcurrentEffect
 import github4s.GithubResponses.{GHResponse, GHResult}
 import github4s.taglessFinal.domain._
 import github4s.{GithubApiUrls, HttpClient}
@@ -28,7 +28,7 @@ import cats.implicits._
 import com.github.marklister.base64.Base64.Encoder
 
 /** Factory to encapsulate calls related to Auth operations  */
-class Auth[M[_]: Applicative](implicit urls: GithubApiUrls) {
+class Auth[M[_]: ConcurrentEffect](implicit urls: GithubApiUrls) {
 
   val httpClient = new HttpClient[M]
 

@@ -16,17 +16,16 @@
 
 package github4s.api
 
-import cats.Applicative
 import cats.data.NonEmptyList
+import cats.effect.ConcurrentEffect
 import github4s.GithubResponses.GHResponse
 import github4s.taglessFinal.domain._
-
 import github4s._
 import io.circe.syntax._
 import io.circe.generic.auto._
 
 /** Factory to encapsulate calls related to Repositories operations  */
-class Repos[M[_]: Applicative](implicit urls: GithubApiUrls) {
+class Repos[M[_]: ConcurrentEffect](implicit urls: GithubApiUrls) {
 
   import Decoders._
 

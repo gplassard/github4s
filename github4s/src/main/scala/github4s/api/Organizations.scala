@@ -16,15 +16,14 @@
 
 package github4s.api
 
-import cats.Applicative
+import cats.effect.ConcurrentEffect
 import github4s.GithubResponses.GHResponse
 import github4s._
-
 import github4s.taglessFinal.domain.{Pagination, User}
 import io.circe.generic.auto._
 
 /** Factory to encapsulate calls related to Organizations operations  */
-class Organizations[M[_]: Applicative](implicit urls: GithubApiUrls) {
+class Organizations[M[_]: ConcurrentEffect](implicit urls: GithubApiUrls) {
 
   val httpClient = new HttpClient[M]
 

@@ -16,8 +16,8 @@
 
 package github4s.api
 
-import cats.Applicative
 import cats.data.NonEmptyList
+import cats.effect.ConcurrentEffect
 import github4s.GithubResponses.GHResponse
 import github4s.{Decoders, Encoders, GithubApiUrls, HttpClient}
 import github4s.taglessFinal.domain._
@@ -27,7 +27,7 @@ import io.circe.generic.auto._
 /**
  * Factory that encapsulates all the Git Database API calls
  */
-class GitData[M[_]: Applicative](implicit urls: GithubApiUrls) {
+class GitData[M[_]: ConcurrentEffect](implicit urls: GithubApiUrls) {
 
   import Decoders._
   import Encoders._

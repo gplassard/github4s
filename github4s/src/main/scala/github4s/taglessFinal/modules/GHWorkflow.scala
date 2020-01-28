@@ -16,7 +16,7 @@
 
 package github4s.taglessFinal.modules
 
-import cats.Applicative
+import cats.effect.ConcurrentEffect
 import github4s.api._
 import github4s.taglessFinal.algebra._
 import github4s.taglessFinal.interpreters._
@@ -35,7 +35,7 @@ sealed trait GHWorkflow[F[_]] {
 
 }
 
-class GithubAPI[F[_]: Applicative](accessToken: Option[String] = None) extends GHWorkflow[F] {
+class GithubAPI[F[_]: ConcurrentEffect](accessToken: Option[String] = None) extends GHWorkflow[F] {
   implicit val userHttp  = new Users[F]()
   implicit val repoHttp  = new Repos[F]()
   implicit val authHttp  = new Auth[F]()
