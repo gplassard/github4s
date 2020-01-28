@@ -20,7 +20,7 @@ import java.util.concurrent.TimeUnit
 
 import cats.effect.{ConcurrentEffect, ContextShift, IO, Timer}
 import github4s.taglessFinal.domain.Pagination
-import io.circe.{Decoder, Encoder, Json}
+import io.circe.Decoder
 import github4s.GithubResponses.{
   GHException,
   GHResponse,
@@ -28,15 +28,12 @@ import github4s.GithubResponses.{
   JsonParsingException,
   UnsuccessfulHttpRequest
 }
-import io.circe.jackson.parse
 import cats.implicits._
 import org.http4s._
 import org.http4s.client.blaze._
 import org.http4s.MediaType
-import org.http4s.circe._
+import org.http4s.circe.CirceEntityDecoder._
 import org.http4s.headers.`Content-Type`
-
-import scala.concurrent.ExecutionContext
 import scala.concurrent.duration.Duration
 
 class HttpExec[M[_]: ConcurrentEffect](implicit u: GithubApiUrls) {
@@ -49,7 +46,7 @@ class HttpExec[M[_]: ConcurrentEffect](implicit u: GithubApiUrls) {
 
   private[this] def runMap[A](
       rb: HttpRequestBuilder[M],
-      mapResponse: Response[M] => M[GHResponse[A]]): M[GHResponse[A]] = {
+      mapResponse: Response[M] => M[GHResponse[A]])(implicit D: Decoder[A]): M[GHResponse[A]] = {
 
     val connTimeout: Duration = Duration(1000l, TimeUnit.MILLISECONDS)
     val readTimeoutMs: Int    = 5000 ///TODO where to add this parameter to client?
@@ -85,7 +82,12 @@ class HttpExec[M[_]: ConcurrentEffect](implicit u: GithubApiUrls) {
       .withConnectTimeout(connTimeout)
       .resource
       .use({ client =>
-        client.fetch(request)(mapResponse) // TODO Chose: fetch with mapResponse refactored to parse streams OR client.expect[A]
+        client
+          .expect[A](request)
+          .flatMap({ a =>
+            Either.right[GHException, GHResult[A]](GHResult(a, 200, Map())).pure[M]
+          }) //TODO cant get response headers?
+      //client.fetch(request)(mapResponse) // TODO Chose: fetch with mapResponse refactored to parse streams OR client.expect[A]
       })
   }
 
@@ -112,16 +114,14 @@ class HttpExec[M[_]: ConcurrentEffect](implicit u: GithubApiUrls) {
         GHResult((): Unit, r.status.code, headersToMap(r.headers)))
       .pure[M]
 
-  def decodeEntity[A](r: Response[M])(implicit D: Decoder[A]): M[GHResponse[A]] = {
-    println(r.body.getClass())
-    parse(r.body.toString()) //TODO parsing as a stream
+  def decodeEntity[A](r: Response[M])(implicit D: Decoder[A]): M[GHResponse[A]] = ???
+  /*parse(r.body.toString())
       .flatMap(_.as[A])
       .bimap[GHException, GHResult[A]](
         e => JsonParsingException(e.getMessage, r.body.toString()),
         result => GHResult(result, r.status.code, headersToMap(r.headers))
       )
-      .pure[M]
-  }
+      .pure[M]*/ //
 
   private def headersToMap(headers: Headers): Map[String, String] =
     headers.toList

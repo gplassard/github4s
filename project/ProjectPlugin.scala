@@ -69,6 +69,7 @@ object ProjectPlugin extends AutoPlugin {
         %%("simulacrum", V.simulacrum),
         %%("circe-core", V.circe),
         %%("circe-generic", V.circe),
+        "io.circe" %% "circe-literal" % V.circe,
         "io.circe" %% "circe-jackson28" % V.circeJackson,
         %%("base64", V.base64),
         "org.http4s" %% "http4s-blaze-client" % V.http4s,
