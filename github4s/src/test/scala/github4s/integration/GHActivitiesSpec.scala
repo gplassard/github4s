@@ -18,7 +18,7 @@ package github4s.integration
 
 import github4s.Github
 import github4s.Github._
-import github4s.taglessFinal.domain.{Stargazer, StarredRepository, Subscription}
+import github4s.domain.{Stargazer, StarredRepository, Subscription}
 
 import github4s.utils.{BaseIntegrationSpec, Integration}
 

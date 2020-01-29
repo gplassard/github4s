@@ -14,15 +14,27 @@
  * limitations under the License.
  */
 
-package github4s.utils
+package github4s.domain
 
-import github4s.http.GithubAPIv3Config
+case class Subscription(
+    subscribed: Boolean,
+    ignored: Boolean,
+    reason: Option[String],
+    created_at: String,
+    url: String,
+    thread_url: String)
 
-trait DummyGithubUrls {
+case class SubscriptionRequest(
+    subscribed: Boolean,
+    ignored: Boolean
+)
 
-  implicit val dummyUrls: GithubAPIv3Config = GithubAPIv3Config(
-    baseUrl = "http://127.0.0.1:9999/",
-    authorizeUrl = "http://127.0.0.1:9999/authorize?client_id=%s&redirect_uri=%s&scope=%s&state=%s",
-    accessTokenUrl = "http://127.0.0.1:9999/login/oauth/access_token"
-  )
-}
+case class Stargazer(
+    starred_at: Option[String],
+    user: User
+)
+
+case class StarredRepository(
+    starred_at: Option[String],
+    repo: Repository
+)

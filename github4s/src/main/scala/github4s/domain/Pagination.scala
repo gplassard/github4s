@@ -14,15 +14,9 @@
  * limitations under the License.
  */
 
-package github4s.utils
+package github4s.domain
 
-import github4s.http.GithubAPIv3Config
-
-trait DummyGithubUrls {
-
-  implicit val dummyUrls: GithubAPIv3Config = GithubAPIv3Config(
-    baseUrl = "http://127.0.0.1:9999/",
-    authorizeUrl = "http://127.0.0.1:9999/authorize?client_id=%s&redirect_uri=%s&scope=%s&state=%s",
-    accessTokenUrl = "http://127.0.0.1:9999/login/oauth/access_token"
-  )
-}
+case class Pagination(
+    page: Int,
+    per_page: Int
+)

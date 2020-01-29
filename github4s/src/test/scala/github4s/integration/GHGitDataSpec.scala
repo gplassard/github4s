@@ -19,8 +19,7 @@ package github4s.integration
 import cats.data.NonEmptyList
 import github4s.Github
 import github4s.Github._
-import github4s.free.domain.{Ref, RefCommit, TreeResult}
-import github4s.implicits1._
+import github4s.domain.{Ref, RefCommit, TreeResult}
 import github4s.utils.{BaseIntegrationSpec, Integration}
 
 trait GHGitDataSpec extends BaseIntegrationSpec {

@@ -19,9 +19,9 @@ package github4s.unit
 import cats.Id
 import github4s.GithubResponses.{GHResponse, GHResult}
 import github4s.HttpClient
-import github4s.api.Activities
+import github4s.interpreters.ActivitiesInterpreter
 import github4s.free.domain._
-import github4s.taglessFinal.domain.{Stargazer, StarredRepository, Subscription}
+import github4s.domain.{Stargazer, StarredRepository, Subscription}
 import github4s.utils.BaseSpec
 
 class ActivitiesSpec extends BaseSpec {
@@ -44,7 +44,7 @@ class ActivitiesSpec extends BaseSpec {
       response = response
     )
 
-    val activities = new Activities[Id] {
+    val activities = new ActivitiesInterpreter[Id] {
       override val httpClient: HttpClient[Id] = httpClientMock
     }
     activities.setThreadSub(sampleToken, headerUserAgent, validThreadId, true, false)

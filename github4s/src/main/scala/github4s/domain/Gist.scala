@@ -14,15 +14,32 @@
  * limitations under the License.
  */
 
-package github4s.utils
+package github4s.domain
 
-import github4s.http.GithubAPIv3Config
+case class Gist(
+    url: String,
+    id: String,
+    description: String,
+    public: Boolean,
+    files: Map[String, GistFile]
+)
 
-trait DummyGithubUrls {
+case class GistFile(
+    content: String
+)
 
-  implicit val dummyUrls: GithubAPIv3Config = GithubAPIv3Config(
-    baseUrl = "http://127.0.0.1:9999/",
-    authorizeUrl = "http://127.0.0.1:9999/authorize?client_id=%s&redirect_uri=%s&scope=%s&state=%s",
-    accessTokenUrl = "http://127.0.0.1:9999/login/oauth/access_token"
-  )
-}
+case class NewGistRequest(
+    description: String,
+    public: Boolean,
+    files: Map[String, GistFile]
+)
+
+case class EditGistFile(
+    content: String,
+    filename: Option[String] = None
+)
+
+case class EditGistRequest(
+    description: String,
+    files: Map[String, Option[EditGistFile]]
+)

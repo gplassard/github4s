@@ -14,15 +14,23 @@
  * limitations under the License.
  */
 
-package github4s.utils
+package github4s.domain
 
-import github4s.http.GithubAPIv3Config
-
-trait DummyGithubUrls {
-
-  implicit val dummyUrls: GithubAPIv3Config = GithubAPIv3Config(
-    baseUrl = "http://127.0.0.1:9999/",
-    authorizeUrl = "http://127.0.0.1:9999/authorize?client_id=%s&redirect_uri=%s&scope=%s&state=%s",
-    accessTokenUrl = "http://127.0.0.1:9999/login/oauth/access_token"
-  )
-}
+case class User(
+    id: Int,
+    login: String,
+    avatar_url: String,
+    html_url: String,
+    name: Option[String] = None,
+    email: Option[String] = None,
+    company: Option[String] = None,
+    blog: Option[String] = None,
+    location: Option[String] = None,
+    bio: Option[String] = None,
+    followers_url: Option[String] = None,
+    following_url: Option[String] = None,
+    `type`: String = "User", // I think this can be either "User" or "Organization"
+    hireable: Option[Boolean] = None,
+    public_repos: Option[Int] = None,
+    contributions: Option[Int] = None
+)

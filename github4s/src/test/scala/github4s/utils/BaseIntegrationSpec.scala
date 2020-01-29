@@ -17,7 +17,6 @@
 package github4s.utils
 
 import github4s.GithubResponses.{GHResponse, GHResult}
-import github4s.HttpRequestBuilderExtension
 import github4s.free.interpreters.{Capture, Interpreters}
 import org.scalatest.{Assertion, Ignore, Inspectors, Tag}
 import org.scalatest.flatspec.AsyncFlatSpec

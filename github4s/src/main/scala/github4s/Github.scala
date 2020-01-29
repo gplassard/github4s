@@ -16,33 +16,47 @@
 
 package github4s
 
+import java.util.concurrent.TimeUnit.MILLISECONDS
 import cats.effect.ConcurrentEffect
-import github4s.taglessFinal.modules._
+import github4s.algebras.{
+  Activities,
+  Auth,
+  Gists,
+  GitData,
+  Issues,
+  Organizations,
+  PullRequests,
+  Repositories,
+  Users
+}
+import github4s.modules._
+import scala.concurrent.ExecutionContext
+import scala.concurrent.duration.Duration
 import scala.language.higherKinds
 
-/**
- * Represent the Github API wrapper
- * @param accessToken to identify the authenticated user
- */
-class Github[F[_]: ConcurrentEffect](accessToken: Option[String] = None)(
-    implicit git: GHWorkflow[F]) {
-  val users         = git.users
-  val repos         = git.repos
-  val auth          = git.auth
-  val gists         = git.gists
-  val issues        = git.issues
-  val activities    = git.activities
-  val gitData       = git.gitData
-  val pullRequests  = git.pullRequests
-  val organizations = git.organizations
+class Github[F[_]: ConcurrentEffect](accessToken: Option[String], timeout: Option[Duration])(
+    implicit ec: ExecutionContext) {
+
+  val module: GithubAPIs[F] =
+    new GithubAPIv3[F](accessToken, timeout.getOrElse(Duration(1000l, MILLISECONDS)))
+
+  val users: Users[F]                 = module.users
+  val repos: Repositories[F]          = module.repos
+  val auth: Auth[F]                   = module.auth
+  val gists: Gists[F]                 = module.gists
+  val issues: Issues[F]               = module.issues
+  val activities: Activities[F]       = module.activities
+  val gitData: GitData[F]             = module.gitData
+  val pullRequests: PullRequests[F]   = module.pullRequests
+  val organizations: Organizations[F] = module.organizations
 
 }
 
-/** Companion object for [[github4s.Github]] */
 object Github {
 
-  def apply[F[_]: ConcurrentEffect](accessToken: Option[String] = None)(
-      implicit git: GHWorkflow[F]) =
-    new Github[F](accessToken)
+  def apply[F[_]: ConcurrentEffect](
+      accessToken: Option[String] = None,
+      timeout: Option[Duration] = None)(implicit ec: ExecutionContext): Github[F] =
+    new Github[F](accessToken, timeout)
 
 }

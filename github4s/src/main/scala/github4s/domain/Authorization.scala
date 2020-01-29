@@ -14,15 +14,36 @@
  * limitations under the License.
  */
 
-package github4s.utils
+package github4s.domain
 
-import github4s.http.GithubAPIv3Config
+case class Authorization(
+    id: Int,
+    url: String,
+    token: String
+)
 
-trait DummyGithubUrls {
+case class NewAuthRequest(
+    scopes: List[String],
+    note: String,
+    client_id: String,
+    client_secret: String
+)
 
-  implicit val dummyUrls: GithubAPIv3Config = GithubAPIv3Config(
-    baseUrl = "http://127.0.0.1:9999/",
-    authorizeUrl = "http://127.0.0.1:9999/authorize?client_id=%s&redirect_uri=%s&scope=%s&state=%s",
-    accessTokenUrl = "http://127.0.0.1:9999/login/oauth/access_token"
-  )
-}
+case class Authorize(
+    url: String,
+    state: String
+)
+
+case class OAuthToken(
+    access_token: String,
+    token_type: String,
+    scope: String
+)
+
+case class NewOAuthRequest(
+    client_id: String,
+    client_secret: String,
+    code: String,
+    redirect_uri: String,
+    state: String
+)
