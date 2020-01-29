@@ -17,10 +17,10 @@
 package github4s.utils
 
 import com.github.marklister.base64.Base64._
-import github4s.free.domain._
+import github4s.domain._
 import java.util.UUID
 
-import github4s.taglessFinal.domain.{Stargazer, StarredRepository, Subscription}
+import github4s.domain.{Stargazer, StarredRepository, Subscription}
 
 trait TestData extends DummyGithubUrls {
 

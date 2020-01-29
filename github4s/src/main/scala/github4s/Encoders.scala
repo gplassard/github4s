@@ -16,7 +16,7 @@
 
 package github4s
 
-import github4s.taglessFinal.domain._
+import github4s.domain._
 import io.circe._
 import io.circe.syntax._
 import io.circe.generic.auto._

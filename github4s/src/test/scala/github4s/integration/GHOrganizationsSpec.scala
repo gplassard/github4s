@@ -18,8 +18,7 @@ package github4s.integration
 
 import github4s.Github
 import github4s.Github._
-import github4s.free.domain.User
-import github4s.implicits1._
+import github4s.domain.User
 import github4s.utils.{BaseIntegrationSpec, Integration}
 
 trait GHOrganizationsSpec extends BaseIntegrationSpec {

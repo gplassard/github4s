@@ -21,7 +21,7 @@ import cats.instances.either._
 import cats.instances.list._
 import cats.syntax.list._
 import cats.syntax.traverse._
-import github4s.taglessFinal.domain._
+import github4s.domain._
 import io.circe.Decoder.Result
 import io.circe._
 import io.circe.generic.auto._
