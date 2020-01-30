@@ -263,6 +263,10 @@ object Decoders {
   implicit val decoderAuthorization: Decoder[Authorization]   = deriveDecoder[Authorization]
   implicit val decoderOAuthToken: Decoder[OAuthToken]         = deriveDecoder[OAuthToken]
   implicit val decoderRelease: Decoder[Release]               = deriveDecoder[Release]
+  implicit val decoderBranchProtection: Decoder[BranchProtection] =
+    deriveDecoder[BranchProtection]
+  implicit val decoderRequiredStatusCheck: Decoder[RequiredStatusChecks] =
+    deriveDecoder[RequiredStatusChecks]
 
   implicit val decodeStargazer: Decoder[Stargazer] =
     decoderUser

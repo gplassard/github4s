@@ -36,6 +36,7 @@ sealed trait GithubAPIs[F[_]] {
   def organizations: Organizations[F]
   def teams: Teams[F]
   def projects: Projects[F]
+  def branches: Branches[F]
 }
 
 class GithubAPIv3[F[_]: ConcurrentEffect](accessToken: Option[String] = None, timeout: Duration)(
@@ -56,5 +57,6 @@ class GithubAPIv3[F[_]: ConcurrentEffect](accessToken: Option[String] = None, ti
   override val organizations: Organizations[F] = new OrganizationsInterpreter[F]
   override val teams: Teams[F]                 = new TeamsInterpreter[F]
   override val projects: Projects[F]           = new ProjectsInterpreter[F]
+  override val branches: Branches[F]           = new BranchesInterpreter[F]
 
 }
