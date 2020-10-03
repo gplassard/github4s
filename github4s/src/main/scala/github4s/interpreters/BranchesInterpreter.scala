@@ -23,9 +23,12 @@ import github4s.domain._
 import github4s.Encoders._
 import github4s.domain.{BranchProtection, RequiredStatusChecks}
 import github4s.http.HttpClient
+import io.circe.Json
 
 class BranchesInterpreter[F[_]](implicit client: HttpClient[F], accessToken: Option[String])
     extends Branches[F] {
+
+  private val previewHeader = "Accept" -> "application/vnd.github.luke-cage-preview+json"
 
   override def getBranchProtection(
       owner: String,
@@ -36,20 +39,20 @@ class BranchesInterpreter[F[_]](implicit client: HttpClient[F], accessToken: Opt
     client.get[BranchProtection](
       accessToken,
       s"repos/$owner/$repo/branches/$branch/protection",
-      headers
+      headers + previewHeader
     )
 
   override def updateBranchProtection(
       owner: String,
       repo: String,
       branch: String,
-      protection: BranchProtection,
+      protection: UpdateBranchProtectionRequest,
       headers: Map[String, String] = Map()
-  ): F[GHResponse[BranchProtection]] =
-    client.put[BranchProtection, BranchProtection](
+  ): F[GHResponse[Json]] =
+    client.put[UpdateBranchProtectionRequest, Json](
       accessToken,
       s"repos/$owner/$repo/branches/$branch/protection",
-      headers,
+      headers + previewHeader,
       data = protection
     )
 
@@ -59,7 +62,7 @@ class BranchesInterpreter[F[_]](implicit client: HttpClient[F], accessToken: Opt
       branch: String,
       headers: Map[String, String] = Map()
   ): F[GHResponse[Unit]] =
-    client.delete(accessToken, s"repos/$owner/$repo/branches/$branch/protection", headers)
+    client.delete(accessToken, s"repos/$owner/$repo/branches/$branch/protection", headers + previewHeader)
 
   override def updateRequiredStatusChecks(
       owner: String,
@@ -71,7 +74,7 @@ class BranchesInterpreter[F[_]](implicit client: HttpClient[F], accessToken: Opt
     client.patch[RequiredStatusChecks, RequiredStatusChecks](
       accessToken,
       s"repos/$owner/$repo/branches/$branch/protection/required_status_checks",
-      headers,
+      headers + previewHeader,
       data = requiredStatusChecks
     )
 
@@ -84,7 +87,7 @@ class BranchesInterpreter[F[_]](implicit client: HttpClient[F], accessToken: Opt
     client.delete(
       accessToken,
       s"repos/$owner/$repo/branches/$branch/protection/required_status_checks",
-      headers
+      headers + previewHeader
     )
 
   override def listRequiredStatusChecksContexts(
@@ -96,7 +99,7 @@ class BranchesInterpreter[F[_]](implicit client: HttpClient[F], accessToken: Opt
     client.get[List[String]](
       accessToken,
       s"repos/$owner/$repo/branches/$branch/protection/required_status_checks/contexts",
-      headers
+      headers + previewHeader
     )
 
 }

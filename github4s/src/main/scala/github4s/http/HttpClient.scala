@@ -26,6 +26,7 @@ import io.circe.{Decoder, Encoder}
 import org.http4s.circe.CirceEntityDecoder._
 import github4s.http.Http4sSyntax._
 import org.http4s.client.Client
+import org.http4s.client.middleware.Logger
 
 import scala.concurrent.ExecutionContext
 import scala.concurrent.duration.Duration

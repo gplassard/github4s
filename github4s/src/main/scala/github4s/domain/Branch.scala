@@ -18,21 +18,22 @@ package github4s.domain
 
 case class BranchProtection(
     required_status_checks: Option[RequiredStatusChecks],
-    enforce_admins: Boolean,
+    enforce_admins: Option[EnforceAdmins],
     required_pull_request_reviews: Option[RequiredPullRequestReviews],
     restrictions: Option[Restrictions],
-    required_linear_history: Boolean,
-    allow_force_pushes: Boolean,
-    allow_deletions: Boolean
+    required_linear_history: Option[RequiredLinearHistory],
+    allow_force_pushes: Option[AllowForcePushes],
+    allow_deletions: Option[AllowDeletions]
 )
 
 case class RequiredStatusChecks(
     strict: Boolean,
     contexts: List[String]
 )
+case class EnforceAdmins(url: String, enabled: Boolean)
 
 case class RequiredPullRequestReviews(
-    dismissal_restrictions: DismissalRestrictions,
+    dismissal_restrictions: Option[DismissalRestrictions],
     dismiss_stale_reviews: Boolean,
     require_code_owner_reviews: Boolean,
     required_approving_review_count: Option[Int]
@@ -48,3 +49,18 @@ case class Restrictions(
     teams: List[String],
     apps: List[String]
 )
+
+case class RequiredLinearHistory(enabled: Boolean)
+case class AllowForcePushes(enabled: Boolean)
+case class AllowDeletions(enabled: Boolean)
+
+
+case class UpdateBranchProtectionRequest(
+                             required_status_checks: Option[RequiredStatusChecks],
+                             enforce_admins: Option[Boolean],
+                             required_pull_request_reviews: Option[RequiredPullRequestReviews],
+                             restrictions: Option[Restrictions],
+                             required_linear_history: Option[Boolean],
+                             allow_force_pushes: Option[Boolean],
+                             allow_deletions: Option[Boolean]
+                           )

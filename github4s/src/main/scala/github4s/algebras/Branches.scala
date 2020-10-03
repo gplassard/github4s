@@ -18,6 +18,7 @@ package github4s.algebras
 
 import github4s.GithubResponses
 import github4s.domain._
+import io.circe.Json
 
 trait Branches[F[_]] {
 
@@ -40,9 +41,9 @@ trait Branches[F[_]] {
       owner: String,
       repo: String,
       branch: String,
-      protection: BranchProtection,
+      protection: UpdateBranchProtectionRequest,
       headers: Map[String, String] = Map()
-  ): F[GithubResponses.GHResponse[BranchProtection]]
+  ): F[GithubResponses.GHResponse[Json]]
 
   def removeBranchProtection(
       owner: String,

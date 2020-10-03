@@ -63,7 +63,8 @@ object Encoders {
   implicit val encoderNewReleaseRequest: Encoder[NewReleaseRequest] =
     deriveEncoder[NewReleaseRequest]
   implicit val encoderNewStatusRequest: Encoder[NewStatusRequest] = deriveEncoder[NewStatusRequest]
-  implicit val encoderBranchProtection: Encoder[BranchProtection] = deriveEncoder[BranchProtection]
+  implicit val encoderUpdateBranchProtectionRequest: Encoder[UpdateBranchProtectionRequest] =
+    deriveEncoder[UpdateBranchProtectionRequest]
   implicit val encoderRequiredStatusCheck: Encoder[RequiredStatusChecks] =
     deriveEncoder[RequiredStatusChecks]
 }

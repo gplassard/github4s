@@ -20,6 +20,8 @@ import cats.effect.ConcurrentEffect
 import github4s.algebras._
 import github4s.http.HttpClient
 import github4s.interpreters._
+import org.http4s.Request
+import org.http4s.client.middleware.Logger
 
 import scala.concurrent.ExecutionContext
 import scala.concurrent.duration.Duration
